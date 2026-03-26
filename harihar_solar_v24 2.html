@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harihar Solar</title>
+<style>
+:root{
+  --slate:#0A1628;--card:#0F2240;--card2:#122848;--border:#1A3A5C;
+  --jade:#14B8A6;--jade2:#0D9488;--jade3:#0F766E;
+  --amber:#D97706;--amber2:#F59E0B;--amber3:#FBBF24;
+  --cyan:#22D3EE;--cyan2:#06B6D4;--green:#16A34A;--green2:#22C55E;
+  --tx:#F0F9FF;--tx2:#BAE6FD;
+  --gj:0 0 20px rgba(20,184,166,.4);--ga:0 0 20px rgba(245,158,11,.4);
+  /* Light mode vars */
+  --bg-page:#0A1628;--bg-card:#0F2240;--bg-card2:#122848;
+  --border-c:#1A3A5C;--text-main:#F0F9FF;--text-sub:#BAE6FD;
+  --text-muted:rgba(255,255,255,.45);--tab-bg:rgba(255,255,255,.04);
+  --input-bg:rgba(255,255,255,.04);--input-border:rgba(255,255,255,.1);
+  --header-bg:linear-gradient(135deg,#060E1A,#0D1E35,#0A1628);
+  --api-bar-bg:linear-gradient(90deg,#060E1A,#0A1628);
+}
+body.light-mode{
+  --bg-page:#F0F4F8;--bg-card:#FFFFFF;--bg-card2:#F8FAFB;
+  --border-c:#D1E0EE;--text-main:#1A2E4A;--text-sub:#2C4E72;
+  --text-muted:rgba(26,46,74,.5);--tab-bg:rgba(20,184,166,.06);
+  --input-bg:#FFFFFF;--input-border:#C8D8E8;
+  --header-bg:linear-gradient(135deg,#FFFFFF,#F0F8FF,#FFFFFF);
+  --api-bar-bg:linear-gradient(90deg,#F8FBFF,#F0F4F8);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg-page);color:var(--text-main);font-size:14px;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--jade);border-radius:10px}
+.blink{width:6px;height:6px;border-radius:50%;background:var(--green2);animation:bl 1.5s infinite;box-shadow:0 0 8px var(--green2)}
+@keyframes bl{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+/* API BAR */
+.api-bar{background:var(--api-bar-bg);border-bottom:1px solid rgba(20,184,166,.25);padding:5px 14px;display:flex;align-items:center;gap:8px;font-size:10px;flex-wrap:wrap}
+/* HEADER */
+.header{background:var(--header-bg);border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--amber),var(--jade),var(--cyan)) 1;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:100;box-shadow:0 4px 30px rgba(0,0,0,.5)}
+.logo-svg{width:42px;height:42px;filter:drop-shadow(0 0 8px rgba(234,88,12,.5))}
+.brand-name{font-size:16px;font-weight:900;background:linear-gradient(135deg,#F59E0B,#14B8A6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.brand-sub{font-size:8px;color:var(--jade);letter-spacing:3px;font-weight:700;text-transform:uppercase}
+.hbtn{padding:6px 13px;border-radius:9px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:.2s}
+.hbtn-o{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.2);color:#fff}
+.hbtn-o:hover{background:rgba(255,255,255,.15);border-color:var(--jade);box-shadow:var(--gj)}
+.lang-tog{display:flex;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:9px;overflow:hidden}
+.lang-btn{padding:5px 11px;border:none;background:transparent;color:rgba(255,255,255,.6);cursor:pointer;font-size:11px;font-weight:700;transition:.2s}
+.lang-btn.on{background:linear-gradient(135deg,var(--jade),var(--jade2));color:#fff}
+/* TABS */
+.tab-wrap{background:var(--api-bar-bg);border-bottom:1px solid rgba(20,184,166,.15);padding:10px 16px}
+.tab-box{display:flex;background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;max-width:460px;padding:4px;gap:3px}
+.tab{flex:1;padding:9px 6px;border:none;background:transparent;color:rgba(255,255,255,.4);cursor:pointer;font-size:11px;font-weight:700;border-radius:9px;text-align:center;transition:.25s}
+.tab:hover:not(.on){color:#fff;background:rgba(255,255,255,.08)}
+.tab.on{background:linear-gradient(135deg,var(--jade),var(--jade2));color:#fff;font-weight:900;box-shadow:0 3px 15px rgba(20,184,166,.5),inset 0 1px 0 rgba(255,255,255,.2)}
+/* PAGES */
+.pg{display:none;padding:16px;max-width:860px;margin:0 auto}.pg.on{display:block}body.light-mode .pg{background:transparent}
+/* CARDS */
+.card{background:linear-gradient(145deg,var(--bg-card),var(--bg-card2));border:1px solid var(--border-c);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--jade),var(--cyan),transparent)}
+.card-glow{box-shadow:0 4px 30px rgba(20,184,166,.12),0 0 0 1px rgba(20,184,166,.1)}
+.sec-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber2);margin-bottom:13px;font-family:monospace;font-weight:800;display:flex;align-items:center;gap:9px;transition:color .3s}
+.g2c{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3c{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* FIELDS */
+.field label{display:block;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--jade);margin-bottom:5px}
+.field input,.field select{width:100%;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:9px;padding:9px 12px;font-size:13px;color:var(--text-main);outline:none;font-family:inherit;transition:.2s}
+.field input::placeholder{color:var(--text-muted)}
+.field input:focus{border-color:var(--jade);color:#fff;box-shadow:0 0 0 3px rgba(20,184,166,.15)}
+.field select{background:var(--bg-page);color:var(--text-sub);cursor:pointer;-webkit-appearance:auto}
+/* BILL UPLOAD */
+.bill-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.bill-lbl{font-size:9px;color:var(--jade);font-weight:800;letter-spacing:1.5px;margin-bottom:6px;text-transform:uppercase}
+.bill-drop{border:2px dashed rgba(20,184,166,.3);border-radius:13px;padding:20px;text-align:center;cursor:pointer;transition:.3s;position:relative;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:rgba(20,184,166,.03)}
+.bill-drop:hover{border-color:var(--jade);background:rgba(20,184,166,.07)}
+.bill-drop.loaded{border-color:var(--jade);background:rgba(20,184,166,.1);border-style:solid}
+.bill-drop.processing{border-color:var(--amber);animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{border-color:var(--amber)}50%{border-color:var(--amber3)}}
+.bill-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.ms-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:8px}
+.ms-cell{border-radius:5px;padding:4px 2px;text-align:center;font-size:7px;font-weight:700;border:1px solid}
+.ms-ok{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:#4ade80}
+.ms-no{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.2)}
+/* MONTHS */
+.month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.mc label{font-size:8px;color:var(--jade);display:block;margin-bottom:3px;text-align:center;font-weight:700}
+.mc input{width:100%;padding:6px 2px;text-align:center;font-family:monospace;font-size:12px;background:var(--input-bg);border:1.5px solid var(--input-border);border-radius:7px;color:var(--text-sub);outline:none;transition:.2s}
+.mc input::placeholder{color:var(--text-muted)}
+.mc input:focus{border-color:var(--jade);color:#fff}
+.mc input.filled{background:rgba(20,184,166,.12);border-color:rgba(20,184,166,.5);color:#5EEAD4;font-weight:800}
+/* SOLAR BOX */
+.solar-box{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(217,119,6,.05));border:2px solid rgba(245,158,11,.35);border-radius:13px;padding:15px;margin-top:12px;display:none;box-shadow:var(--ga)}
+.solar-kw{font-size:34px;font-weight:900;color:var(--amber2);font-family:monospace;text-shadow:0 0 20px rgba(245,158,11,.5)}
+/* BRANDS */
+.brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.brand-btn{border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;transition:.25s;background:rgba(255,255,255,.03)}
+.brand-btn:hover{border-color:var(--amber2);transform:translateY(-2px)}
+.brand-btn.sel{border-color:var(--amber2);background:rgba(245,158,11,.12);box-shadow:var(--ga);transform:translateY(-2px)}
+.brand-btn span{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);display:block}
+.brand-btn.sel span{color:var(--amber2)}
+.brand-btn small{font-size:7px;color:rgba(255,255,255,.25);margin-top:2px;display:block}
+/* OPTIONS */
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.opt-card{border:1.5px solid rgba(255,255,255,.1);border-radius:13px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.03);transition:.25s}
+.opt-card:hover{border-color:var(--amber2)}
+.opt-card.on{border-color:var(--amber2);background:rgba(245,158,11,.1);box-shadow:var(--ga)}
+.opt-check{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.2s}
+.opt-card.on .opt-check{background:linear-gradient(135deg,var(--amber),var(--amber2));border-color:var(--amber);color:#fff}
+.opt-txt{font-size:12px;font-weight:700;color:rgba(255,255,255,.6)}
+.opt-card.on .opt-txt{color:var(--amber2)}
+/* PHOTOS */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.photo-box{border:1.5px dashed rgba(255,255,255,.1);border-radius:13px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;background:rgba(255,255,255,.02);transition:.25s}
+.photo-box:hover{border-color:var(--jade)}
+.photo-box input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.photo-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* CALC BTN */
+.calc-wrap{border-radius:16px;padding:16px;margin-top:8px;background:linear-gradient(135deg,rgba(20,184,166,.08),rgba(34,211,238,.05));border:1px solid rgba(20,184,166,.2)}
+.calc-btn{width:100%;padding:17px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--jade3),var(--jade),var(--cyan2),var(--cyan));color:#fff;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 6px 30px rgba(20,184,166,.5),inset 0 1px 0 rgba(255,255,255,.2);transition:.25s;position:relative;overflow:hidden}
+.calc-btn:hover{box-shadow:0 8px 40px rgba(20,184,166,.7);transform:translateY(-2px)}
+/* BILL PREVIEW */
+.bill-prev{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:11px;padding:12px;margin-top:10px;display:none}
+.bp-row{display:flex;justify-content:space-between;padding:4px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.5)}
+.bp-row:last-child{border-bottom:none}
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:9px;margin-bottom:14px}
+.kpi-card{background:linear-gradient(145deg,var(--bg-card),var(--bg-card2));border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:13px;text-align:center;border-top:3px solid var(--amber2)}
+.kpi-val{font-family:monospace;font-size:16px;color:var(--amber2);font-weight:900;text-shadow:0 0 15px rgba(245,158,11,.4)}
+.kpi-lbl{font-size:8px;color:rgba(255,255,255,.4);margin-top:3px;font-weight:700;text-transform:uppercase}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:14px}
+.stat-card{background:linear-gradient(145deg,var(--bg-card),var(--bg-card2));border:1px solid rgba(20,184,166,.2);border-radius:12px;padding:14px;text-align:center;border-top:3px solid var(--jade)}
+.stat-val{font-size:20px;font-weight:900;color:var(--cyan);font-family:monospace}
+.stat-lbl{font-size:9px;color:rgba(255,255,255,.4);margin-top:3px;font-weight:700;text-transform:uppercase}
+/* OVERLAYS */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;align-items:flex-start;justify-content:center;padding:14px;overflow-y:auto;backdrop-filter:blur(10px)}
+.ov.on{display:flex}
+.ob{background:linear-gradient(145deg,var(--bg-card),var(--bg-card2));border:1px solid rgba(20,184,166,.2);border-radius:18px;padding:22px;width:min(660px,95vw);margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+.ov-head{font-size:16px;font-weight:900;color:var(--amber2);margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}
+.xbtn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);font-size:18px;cursor:pointer;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+.xbtn:hover{background:rgba(231,76,60,.3);color:#fff}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:13px 0}
+.adm-tabs{display:flex;gap:5px;margin-bottom:15px;flex-wrap:wrap}
+.adm-tab{padding:6px 14px;border:1.5px solid var(--border);border-radius:9px;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;font-size:11px;font-weight:700;transition:.2s}
+.adm-tab:hover{border-color:var(--jade);color:var(--jade)}
+.adm-tab.on{background:linear-gradient(135deg,var(--jade),var(--jade2));color:#fff;border-color:var(--jade)}
+.slab-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:7px;align-items:center;margin-bottom:7px}
+.co-row{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:center;margin-bottom:7px}
+.del-btn{padding:6px 9px;background:rgba(192,57,43,.8);border:none;color:#fff;border-radius:7px;cursor:pointer;font-size:10px}
+.add-btn{padding:8px 14px;background:transparent;border:1.5px dashed var(--jade);color:var(--jade);border-radius:9px;cursor:pointer;font-size:11px;font-weight:700;width:100%;margin-top:5px}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(245,158,11,.3);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.info-box{background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:9px;padding:10px 12px;margin-top:8px}
+.irow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px;color:rgba(255,255,255,.5)}
+.irow:last-child{border-bottom:none}
+/* SLIDES */
+.slides-wrap{display:flex;flex-direction:column;gap:16px}
+.slide{border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.sl-cover{background:linear-gradient(145deg,#030810,#081422);padding:28px;color:#fff;position:relative;overflow:hidden}
+.sl-white{background:linear-gradient(135deg,#FAFFFE,#F0FFF8);padding:22px;color:#1a1a2e}
+.sl-dark{background:linear-gradient(145deg,#030810,#081422);padding:22px;color:#fff}
+/* ROI SLIDE — Clean, Readable, No Lines */
+.roi-slide{background:linear-gradient(135deg,#1a2744,#0f1e38);padding:14px 16px;color:#fff}
+.roi-title{font-size:18px;font-weight:900;color:#FFFFFF;margin-bottom:20px;text-align:center;letter-spacing:.5px}
+.roi-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;background:rgba(255,255,255,.05);border-radius:12px;padding:14px;border-left:4px solid var(--jade)}
+.roi-step.amber{border-left-color:var(--amber2)}
+.roi-step.green{border-left-color:var(--green2)}
+.roi-step.cyan{border-left-color:var(--cyan)}
+.roi-num{min-width:32px;height:32px;border-radius:50%;background:var(--jade);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;font-family:'Segoe UI',sans-serif;flex-shrink:0}
+.roi-step.amber .roi-num{background:var(--amber2)}
+.roi-step.green .roi-num{background:var(--green)}
+.roi-step.cyan .roi-num{background:var(--cyan2)}
+.roi-label{font-size:11px;color:rgba(255,255,255,.5);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.roi-calc{font-size:14px;color:#fff;font-weight:600;line-height:1.5}
+.roi-result{font-size:15px;font-weight:900;color:var(--green2);margin-top:5px}
+.roi-step.amber .roi-result{color:var(--amber2)}
+.roi-step.cyan .roi-result{color:var(--cyan)}
+.roi-big{background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(20,184,166,.1));border:2px solid rgba(34,197,94,.4);border-radius:14px;padding:16px;text-align:center;margin-top:4px}
+.roi-big-val{font-size:28px;font-weight:900;color:var(--green2);font-family:monospace}
+.roi-big-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-weight:600}
+/* Slide components */
+.sl-tag{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--amber2);margin-bottom:7px;font-family:monospace;font-weight:800}
+.sl-tagj{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--jade);margin-bottom:7px;font-family:monospace;font-weight:800}
+.sl-h2{font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:12px}
+.sl-h2w{font-size:16px;font-weight:800;color:#fff;margin-bottom:12px}
+.sl-logo-r{display:flex;align-items:center;gap:8px;margin-bottom:13px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,.08)}
+.sl-logo-rw{display:flex;align-items:center;gap:8px;margin-bottom:13px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.cover-body{display:flex;gap:14px;align-items:flex-start;margin-top:13px}
+.cover-info{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:13px}
+.ci-row{display:flex;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
+.ci-row:last-child{border-bottom:none}
+.ci-lbl{color:rgba(255,255,255,.3);width:110px;flex-shrink:0;font-size:10px}
+.ci-val{color:#fff;font-weight:700}
+.cover-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px;justify-content:center}
+.cs-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;text-align:center}
+.cs-val{font-size:15px;font-weight:900;color:var(--amber2);text-shadow:0 0 15px rgba(245,158,11,.4)}
+.cs-lbl{font-size:7px;color:rgba(255,255,255,.3);margin-top:1px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.sl-pc{background:rgba(248,250,252,.9);border-radius:8px;padding:8px 12px;display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;border-left:3px solid #ddd}
+.sl-total{background:linear-gradient(135deg,#0A1628,#0D1E35);color:#fff;border-radius:9px;padding:11px 14px;display:flex;justify-content:space-between;font-size:14px;font-weight:900;margin-top:8px;border:1px solid rgba(20,184,166,.3)}
+.sl-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.sl-kp{background:linear-gradient(145deg,#E8FFF5,#F0FFF8);border-radius:10px;padding:11px;text-align:center;border-top:3px solid var(--jade)}
+.sl-kv{font-size:14px;font-weight:900;color:var(--jade3);font-family:monospace}
+.sl-kl{font-size:9px;color:#4A8060;margin-top:2px;font-weight:700}
+.why-item{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.why-ico{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(217,119,6,.1));border:1px solid rgba(245,158,11,.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cpill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:5px 12px;font-size:10px;font-weight:700;color:#fff}
+.ppt-actions{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.pa-btn{padding:13px 6px;border:none;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;transition:.25s}
+.pa-save{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.2)}
+.pa-wa{background:linear-gradient(135deg,#075E54,#25D366);color:#fff}
+.pa-print{background:linear-gradient(135deg,#1A2E4A,#2C4E72);color:#fff;border:1.5px solid rgba(255,255,255,.2)}
+.pa-agr{background:linear-gradient(135deg,#5B21B6,#7C3AED);color:#fff}
+.pa-pdf{background:linear-gradient(135deg,var(--amber),var(--amber2));color:#fff}
+.key-row{display:none;background:linear-gradient(90deg,#060E1A,#0A1628);border-bottom:1px solid rgba(20,184,166,.2);padding:9px 16px}
+
+/* Light mode overrides */
+/* Brand tabs in light mode */
+body.light-mode #brand-tabs button:not([style*="linear-gradient"]){
+  background:#F0F4F8!important;
+  color:#374151!important;
+  border-color:#C8D8E8!important;
+}
+body.light-mode #brand-cost-panel{
+  color:#1A2E4A;
+}
+body.light-mode #cost-summary-rows{
+  color:#1A2E4A;
+}
+body.light-mode #cost-summary{
+  background:rgba(20,184,166,.05)!important;
+  border-color:rgba(20,184,166,.2)!important;
+}
+/* Fixed charges admin inputs — dark numbers always */
+.slab-row input, .co-row input {
+  color: var(--text-main, var(--tx2));
+}
+/* FC-list inputs always visible */
+#fc-list input, #slab-list input {
+  font-weight: 700;
+}
+body.light-mode #fc-list input,
+body.light-mode #slab-list input,
+body.light-mode #fc-list select {
+  background: #FFFFFF!important;
+  color: #1A2E4A!important;
+  border-color: #C8D8E8!important;
+  font-weight: 700!important;
+}
+body.light-mode .adm-panel input,
+body.light-mode #adm-elec input,
+body.light-mode #adm-comm input {
+  color: #1A2E4A!important;
+  background: #FFFFFF!important;
+}
+/* Checkboxes / option cards in light mode */
+body.light-mode .opt-check{
+  border-color:#94A3B8!important;
+  background:#F0F4F8!important;
+}
+body.light-mode .opt-card{
+  background:#F8FAFB!important;
+  border-color:#D1E0EE!important;
+}
+body.light-mode .opt-card:hover{
+  border-color:var(--amber2)!important;
+  background:rgba(245,158,11,.06)!important;
+}
+body.light-mode .opt-card.on{
+  border-color:var(--amber2)!important;
+  background:rgba(245,158,11,.08)!important;
+}
+body.light-mode .opt-card.on .opt-check{
+  background:linear-gradient(135deg,var(--amber),var(--amber2))!important;
+  border-color:var(--amber)!important;
+  color:#fff!important;
+}
+body.light-mode .opt-card.on .opt-txt{
+  color:var(--amber)!important;
+}
+/* Step 4 finance settings box */
+body.light-mode #fin-settings{
+  background:rgba(245,158,11,.06)!important;
+  border-color:rgba(245,158,11,.3)!important;
+}
+/* ALL input fields in light mode */
+body.light-mode .field input,
+body.light-mode .field select,
+body.light-mode .mc input,
+body.light-mode #api-inp,
+body.light-mode .slab-row input,
+body.light-mode .co-row input,
+body.light-mode #apw,
+body.light-mode [id^="fc-"],
+body.light-mode [id^="cc-r"],
+body.light-mode [id^="cc-f"],
+body.light-mode [id^="pm-"],
+body.light-mode [id^="c-"],
+body.light-mode #margin,
+body.light-mode #net-rate,
+body.light-mode #tod-rate,
+body.light-mode #sheets-url,
+body.light-mode #fin-rate,
+body.light-mode #fin-tenure,
+body.light-mode #fin-down,
+body.light-mode #system-size{
+  background:#FFFFFF!important;
+  color:#1A2E4A!important;
+  border-color:#C8D8E8!important;
+}
+body.light-mode .field input::placeholder,
+body.light-mode .mc input::placeholder{
+  color:rgba(26,46,74,.35)!important;
+}
+body.light-mode .field input:focus,
+body.light-mode .mc input:focus{
+  border-color:var(--jade)!important;
+  color:#1A2E4A!important;
+  box-shadow:0 0 0 3px rgba(20,184,166,.12)!important;
+}
+body.light-mode .field select{
+  background:#FFFFFF!important;
+  color:#1A2E4A!important;
+}
+body.light-mode .field label{
+  color:var(--jade2)!important;
+}
+body.light-mode .mc label{
+  color:var(--jade2)!important;
+}
+body.light-mode .mc input.filled{
+  background:rgba(20,184,166,.1)!important;
+  color:#0A5C52!important;
+}
+/* Card text in light mode */
+body.light-mode .sec-title{
+  color:var(--amber)!important;
+}
+body.light-mode #lavg{
+  color:var(--jade2)!important;
+}
+body.light-mode .solar-kw{
+  color:var(--amber)!important;
+}
+body.light-mode .brand-btn span{
+  color:#374151!important;
+}
+body.light-mode .brand-btn.sel span{
+  color:var(--amber)!important;
+}
+body.light-mode .opt-txt{
+  color:#374151!important;
+}
+body.light-mode .opt-card.on .opt-txt{
+  color:var(--amber)!important;
+}
+/* Bill drop zone */
+body.light-mode .bill-lbl{
+  color:var(--jade2)!important;
+}
+body.light-mode #bt1,
+body.light-mode #bt2{
+  color:var(--jade2)!important;
+}
+body.light-mode #bs1,
+body.light-mode #bs2{
+  color:rgba(26,46,74,.4)!important;
+}
+/* Month grid labels */
+body.light-mode .month-grid{
+  color:#1A2E4A;
+}
+/* Admin panel inputs */
+body.light-mode .adm-tab{
+  border-color:#D1E0EE!important;
+  color:#64748B!important;
+}
+body.light-mode .add-btn{
+  border-color:var(--jade)!important;
+  color:var(--jade2)!important;
+  background:rgba(20,184,166,.04)!important;
+}
+body.light-mode .del-btn{
+  background:rgba(192,57,43,.8)!important;
+}
+/* Card before bar */
+body.light-mode .card::before{
+  background:linear-gradient(90deg,var(--amber),var(--jade),var(--cyan),transparent)!important;
+}
+/* Overlay in light mode */
+body.light-mode .ov-head{
+  color:var(--amber)!important;
+}
+body.light-mode .divider{
+  background:linear-gradient(90deg,transparent,#D1E0EE,transparent)!important;
+}
+/* Info box */
+body.light-mode .irow{
+  color:#475569!important;
+}
+body.light-mode .info-box{
+  background:rgba(20,184,166,.06)!important;
+}
+/* BP rows */
+body.light-mode .bp-row{
+  color:#475569!important;
+  border-bottom-color:rgba(0,0,0,.06)!important;
+}
+/* Calc wrap */
+body.light-mode .calc-wrap{
+  background:linear-gradient(135deg,rgba(20,184,166,.06),rgba(34,211,238,.03))!important;
+}
+/* Photo box */
+body.light-mode .photo-box{
+  background:#F0F4F8!important;
+  border-color:#C8D8E8!important;
+}
+body.light-mode .photo-box > div{
+  color:#64748B!important;
+}
+/* Admin calc panel */
+body.light-mode #cc-result{
+  background:linear-gradient(145deg,rgba(20,184,166,.06),rgba(34,211,238,.03))!important;
+  border-color:rgba(20,184,166,.2)!important;
+}
+body.light-mode #cc-result > div > div{
+  background:rgba(0,0,0,.03)!important;
+}
+body.light-mode .api-bar{border-bottom-color:rgba(20,184,166,.3)}
+body.light-mode .tab-wrap{border-bottom-color:rgba(20,184,166,.2)}
+body.light-mode .brand-name{background:linear-gradient(135deg,#D97706,#0D9488)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;text-shadow:none!important}
+body.light-mode .brand-sub{color:var(--jade2)}
+body.light-mode .hbtn-o{background:rgba(20,184,166,.08);border-color:rgba(20,184,166,.3);color:#1A2E4A}
+body.light-mode .lang-tog{background:rgba(20,184,166,.06);border-color:rgba(20,184,166,.25)}
+body.light-mode .lang-btn{color:rgba(26,46,74,.6)}
+body.light-mode .tab-box{background:rgba(20,184,166,.05);border-color:rgba(20,184,166,.2)}
+body.light-mode .tab{color:rgba(26,46,74,.5)}
+body.light-mode .tab:hover:not(.on){background:rgba(20,184,166,.1);color:#1A2E4A}
+body.light-mode .bill-drop{background:rgba(20,184,166,.03);border-color:rgba(20,184,166,.3)}
+body.light-mode .solar-box{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(217,119,6,.04))}
+body.light-mode .brand-btn{background:#F8FAFB;border-color:#D1E0EE}
+body.light-mode .brand-btn span{color:#374151}
+body.light-mode .opt-card{background:#F8FAFB;border-color:#D1E0EE}
+body.light-mode .opt-txt{color:#374151}
+body.light-mode .bill-prev{background:rgba(245,158,11,.05);border-color:rgba(245,158,11,.2)}
+body.light-mode .bp-row{color:#64748B;border-bottom-color:rgba(0,0,0,.06)}
+body.light-mode .irow{color:#64748B;border-bottom-color:rgba(0,0,0,.06)}
+body.light-mode .info-box{background:rgba(20,184,166,.05);border-color:rgba(20,184,166,.2)}
+body.light-mode .calc-wrap{background:linear-gradient(135deg,rgba(20,184,166,.06),rgba(34,211,238,.04));border-color:rgba(20,184,166,.2)}
+body.light-mode .ov{background:rgba(0,0,0,.5)}
+body.light-mode .ob{border-color:rgba(20,184,166,.2);box-shadow:0 20px 60px rgba(0,0,0,.15)}
+body.light-mode .adm-tab{border-color:#D1E0EE;color:#64748B}
+body.light-mode .adm-tab:hover{border-color:var(--jade);color:var(--jade)}
+body.light-mode .xbtn{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.1);color:#64748B}
+body.light-mode .key-row{background:linear-gradient(90deg,#F8FBFF,#F0F4F8)}
+body.light-mode .mc input.filled{background:rgba(20,184,166,.1);border-color:rgba(20,184,166,.4);color:#0D6E60}
+body.light-mode .photo-box{background:#F8FAFB;border-color:#C8D8E8}
+body.light-mode ::-webkit-scrollbar-track{background:#F0F4F8}
+/* Light mode slide overrides */
+body.light-mode .sl-cover{background:linear-gradient(145deg,#1A2E4A,#243D5C)!important}
+body.light-mode .roi-slide{background:linear-gradient(135deg,#1A2744,#0f1e38)!important}
+body.light-mode .sl-dark{background:linear-gradient(145deg,#1A2E4A,#243D5C)!important}
+/* Light mode pg */
+body.light-mode #pg-form,body.light-mode #pg-ppt,body.light-mode #pg-res,body.light-mode #pg-analytics{background:transparent}
+
+@media print{
+  @page{margin:0;size:A4 portrait}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .header,.tab-wrap,.ppt-actions,.api-bar,.key-row,
+  #pg-form,#pg-res,#pg-analytics,
+  .blink,#ppt-empty,#copy-done,
+  [style*="live update"]{display:none!important}
+  body{background:#fff!important;margin:0;padding:0;width:100%}
+  .pg{display:block!important;padding:0!important;margin:0!important}
+  #pg-ppt{display:block!important}
+  #ppt-data{display:block!important}
+  .slides-wrap{display:block!important;gap:0!important;margin:0!important}
+  .slide{
+    page-break-after:always!important;
+    page-break-inside:avoid!important;
+    break-after:page!important;
+    break-inside:avoid!important;
+    margin:0!important;padding:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    width:100vw!important;
+    height:100vh!important;
+    overflow:hidden!important;
+    display:block!important;
+  }
+  .slide:last-child{
+    page-break-after:auto!important;
+    break-after:auto!important;
+  }
+  .sl-white,.sl-dark,.sl-cover,.roi-slide{
+    height:100vh!important;
+    width:100%!important;
+    padding:20px 24px!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  /* Hide live-update notice in print */
+  .slides-wrap > div:first-child{display:none!important}
+}
+</style>
+</head>
+<body>
+<div class="api-bar">
+  <div class="blink"></div>
+  <span style="color:var(--jade);font-weight:700;font-size:10px">Claude API • LIVE</span>
+  <button onclick="toggleKey()" style="margin-left:auto;background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(245,158,11,.08));border:1.5px solid rgba(245,158,11,.4);border-radius:7px;color:var(--amber2);padding:4px 10px;cursor:pointer;font-size:10px;font-weight:700">🔑 API Key</button>
+</div>
+<div class="key-row" id="key-row">
+  <div style="display:flex;gap:8px;max-width:460px">
+    <input type="password" id="api-inp" placeholder="sk-ant-api..." style="flex:1;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--tx);font-size:12px;outline:none">
+    <button onclick="saveKey()" style="padding:8px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--jade),var(--jade2));color:#fff;cursor:pointer;font-size:12px;font-weight:800">Save</button>
+  </div>
+</div>
+<div class="header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAArA0lEQVR42u18d5ieRbn3756Zp711321JNiGNhJDQQhKlHUhoooD0DaioiAWPvSMWNqscK8oHHFFQAQtw3KWcIwJ6QJJFpUmJEhJCQippW99961Nm5v7+eHcxB/FcBhL1fOd7ruu99tqnzNzzm3vuPkP4B7iYmdC7VKCtnwBgxYo+LAEsusEAgC7QCkAsWbK48cFAO6OzxxIR43/rxczEPZ2SeyD//CkBUADcsZ8au/eyNnogmTslM9Pfaxzq7wHcimVLJBFpAAYg7GCbzj1z1VweffYgrg4fRCacbkzYRmzTEAALqgjpDbFKb3JShbXctP+z1bmXrSKSZaAXAIF7IPFsF1N3t/1bjof+dsCB0NspaGmvAYBtzKnsQx8/WYyu7+Ro4Dhlq/v5KgSQALAAG8ASQAKQDDgAyAGERKJdaJHZTkHb7zg346540bW/bCIaGedKdPLfbHnT3wa8LkHU4Izt259vyzzd/X4qvXBRYIdnSq4jihNETEyCDEiABAAiGqdQQIClZQaDwGBY6TtMynMAGaDOhR2UnfbTaMLS7zXNOW9DA8hOOT5Z/6MBXN61WB3f3ad7mN1T7n3Hh8TIc5/K8NCksF5HzZAlIVlIEBELCICEABGD2ICdAFYQpA5BJMDEYNHA1gIsiC2sgauMdFIphGguIzfnuvoxt3y1mWiUeyBpKcz/SACZmXqXkljaC7Orr+vo1Lbl12aS7QvqtSoiFpqEFEQQFhYQ1ACNAAgBIRgwIWxhDkgKiJE1gAxAAFhYsKQG4QQIGFgWbCGMIq2CXIBYdLwQNh/90fyib9zDYAIz9tWSFvui0a6uLgEiLO11zMBdF16aXnf7Q35p/YJiKdSJdViAFDMLZgaBwAwwC4AJZBnWEnsOgaE2Wys2ekrAMjeWMAvAAhYAGLAQIAIJgrJQXBmNtay8sH928J5flB86/xvLmImImLlL/I8AkLu6RHd3t32SWQ3d9safto48+rW4PCDKsWOIpGKA0IANzAxiQDDAbGEZAFswgx2pAIhNILVJCYnGGwxmC2kBsoAdA77BWgwGEwlSoXFsvTRiMuETn/7Mg6feu7lYLBB1256eTvkPDSB3dQnq7rYrmdMzfnzCPc2jf3zbyEg9YXgAjGTmMW4DyBKIAbYMGGbRWGkwLABjGELCQG1lUluhCGyJiQFmhmVAGsvCGoC5wb3jg2mgKZiUrBbDJBWtOqX99+eu2LL2gclLl/aavc2JYm/KPHR3YyOz33HzyXc3VdadPFiOEyZyiASBBSxbkG2ACAgIY2DSHSA/R9AG4wAx0BCI1tkMlpsgZKMLKwAIWGsAN0s2NRlsNCwIbAUsuMGJjUlignAqJWg/Wntoy6Yr7t++/ak2om7LXXsPRLF3wAOtWEaSpGv9m0+9tbmy9vihik1IKodJAjpqcJClhkq0BMuAIAaxqCTZWVsVGcAKJm4sTZACOcF2crydgBq7yWBL7AmNODv7RWZVccAg21jAYAGAYJlYIiEoBySFKldJp/S6udlVn/nFFuagd3U37S3vZa8AuGLZYnl8N/SLN5/xtbbqc2cPl01CpBwkMXTzgdZkp7Jj68QsLDHBoiHANByW9V0uMh13a5kxxAbCCggLgCWsSu1gmdkJVgATwACxhaas4cz0O0Vtp2vYYWkY1GBrGCtsSoRkgilxkp2bkIlAJFS1QknGrn99/oGzfri0VxmsWCL/IQDknk55fHeffvHOj5zeNLLq0pFSqCGUYssAlE0VX2Db8fqfJ/6EwbRMBFtYwQDDgi1MzmcXSXW7Tk1+IOszDMMIw8RGwCAzYFV6FwxA1hBbMhmfEftTHkBcejGTgmssDIMhLGANTMZJRKTat8etR/UGtTUASUuwYAinOpokOX7uLcW+d36Iju/TvBeUinjNcu/ZXi5uWdXsvvjw93V1lA25AtzQCJaJEFWkt3nFYfbw93008doGUkILa8iMLWOCscDIxkN56snfgEwTrIYFRJRIyFTzkJGZgXoiQGwlTAKoNNHUN3yLRtYfCmMAaigfa2AyysjEaduVHPSRjwSDy49BUnMMJIGBBt9LFZVKxis/deXomuvmYGmvfa1K5bVxYO9SQd1kK/d9+qtNycDEupWGxlXimKFet8rkuDjdrLr93NLpPzzOpCcNpaSRzGTAJKqhBoWVxZuP+8JvRmzz77MeBAOoJSLRzdOGkZlVqWulDQRnPBLFpPBEftHnfs1xZUkSaoBJMpMJnEQm3sTB0pG3HCuev+UtAUamh7FjCKCXVDMxJVrCt7s83nDH9UQO9/aupr8LgOO+5rb7LlsQlDe/p1hNDEHIRiCAxrxWApGQg1XWE3jHOaLvqqOHDvzwESa330BaGgmQiRNwIOIJ+6346jQ5YcFlwsuSMrFliDIf8p5K28L3lUCyRCax8HJk8gd9fnjVdZM9SqaECcAWNpCJ1OnpQ6MtHz5S/OErR+fEi+eWR40WBIkxD5rGtDMJktUa67x8cXH54Q+c3zBtXv1SftUA9vb2ApDg9Q9fEeiKMHAAy8SWwGMCvWFVMJiUHBkpG7/47Pfd6oAtTj3t2Ci9346MSBSBokBELAafPKlw6vW/HsGEZ7OTmiT5zTsnAnUANQqat+Um5mXRtj3XeuqP/5M2rlgSyISZKUqrWOr0tMHhpjcf5wQVnaqs+mFtuGKYlORxo5MBO+a1MjNYOELXSsyDj3+JmV2g1/KrdGvFq+W+pb0w2++5dFFQ739TKTSWAAkWwBjN4HGCAWJDCSS8sF+ILb+4fcpJX1o7PPO8E8L0tE2eYN/GdUJt+AyGJkxc+J6449S30Px3vYmILIjAc99+WjTh1POSlvnvAjSQjJzJcYV8wZ5OTds6ut85J3Yc17VabL3jDi8alNo6QGMmX9Le4z8CQcCKMILNqsEDRh/55/OIwFi++FVxoXqV7AeAoNc/9tEmU0VEypKFIBojWDCgE0AKQEjDDEGCZSVm3RpvXbDtx2d/efLxn/ri5sdvOTH3zHd+Kak826Ym9QFA6xuuehTAo7tFOxiHXLwVwNZxxTV874UPJ3rnubGb3jI6859PnjL/nc8P3POWL+fDRxeWQtJSQBkWbGGtsEYKYrBQY41RA0kpYMMqc7zqYxDurVjRZ/8mHMjMRL0wO1be3q4qA2dWahZsSTIIf7JNCUl+KpOTRt4xUrAltqRZOGK0UtfZ0dWX7by/+6hpr3/bhtFZF5xSnH7eP03ovPXrjcBJl+Dli9Xu3kJXV5dohO67BEBoOe2Wb5ennXvU6MQzT54y/53PDz7xzSPSpWcuqxRDwxDCWquFtZQPrBROCtrvGHeXGx4zE8gKWasDAQ8vKv7+skXUjVflK+/xuueuxYq6+/SW6897T8vAyu8X64khSRI0HgO1ACfsts/QumNBH4bWDqvy1rNzKnIq1RARU5J2WISpKRv0YRf906RjPtDfaBeCumH/Ohr+9O72p3raUs9/+6Eg3Dq7rsm4yrhB1kUtCYxJT7md87ObneITS/ToiwpSkRjXyQSArc7kpBqVh1zV9MZ7PsHLFys6vk/v4yXcZwEJLu4610RxI9xGvNtMECAc0v0vKK+66+hwypHfCV938ZHimVvPtWLnu/J2eBLFJSRc31+HpTbu6hp8smOHpEtuSP7qWe+G5eVdCitg++1ITphwuiuMdHNZWaP8rjA14eZk9kW308afn+dt++Wbk7iiSPh4SSO/BKIQJoxBsv/NzHwpiDTjT4/3OgfyWGxt8x9/U8DtH9jgxcNNhhSTBLG0AAiiEY8HBCCg0ZxRKPodfbve9NMLDpo+vX/ozosvDGqb31tSE3426S23/etrCb2Pfzv4i3delMW2d0f+lB9lT7zp5j9U0DzrP4/9WZq3LKlUNJgUIA1oDDyQAIjBJACO2QnypKe/dUFm/uVP755+2PsAjhG86QfvPDGz9ZEH6mHNklRCggEJGNEIeAoBMDWizIDROZ9U5LeWw4mHXdyx9KbbGxki3Yjf7cFsvyJNADUCYwpAgsEHPnh2MPjwTSndnx8NoUmRGo9es2ioYkECJBq2oQXrTN5TpWDhR/Mn9F6zp8t4z5TIs43ENxV3HemTASAsYyw6bIjJCLZgNkz8p8iUkKMRaVPuz2Z3/r53243nfHfHr76S7unkveLME8Dcw5Kfv9IbvPPcrzcN9N1pK7vyxVBpIiXZElsmZjtGHxNb4KXYIjEAncBGo0cBhBUr+vahFl7d1/Aqo8phRmsQE8hasE4gOCZfGEoJJpc0OazJgSbFhjw2ylqCLQ8AI5suDg84z1naCwN+7WkKZhAthdk++yOSy5vfj+pOMAu4IlYOJeSSIY8MeVJToCylhSUHEUEnIG6sZ04MZFyaA3KwpHvPklB7pkR6YSEURBLOjBMLhiCyAHITESt3KNH1UbIaTPCtEJ5QUpGQDbNaIBGBlOx23DFjxoxiTyckEb3mjBkRmHsgiag29O/n3mgT8XYTJkaDHSI0EiiwGtbEBA5JukK4QQ4cFag2ABCRTgDmcL9Buz1H1Foal/V7VQY2EltgZvY3XX74eq8+PDlmyVIYUKEdlG1fT37uITRN/o2Yc+TT8pDzNrb52TLY4Pmo5skNT/qtrSm1NTe3fDBRvC8SPE8wO7NLa3JmsKZHZy6MpgMReTkejEo50f/gDLl5+UKqbF5MUekYVLfOpNpOgCQEaTJuwZi5F81pOuQzL+yJIqE91cAvPnZnS3zXF593w9GcEYIbadyYlIB0HAdGuNCOPwI/+xxlCo+qpvaH0nNOeCr1uvduAe8T3F7hcjD4/I1TnK3LF1B15/EIh46guDRHUdisbB1xomFAWigFhgDYsJvKUX3yacc0HX3V4z09nXLpX2kZ/PVLeNkyAsB687O5lO82p5wABgQhAJLBmDRnOMRQIi4ENHwU4tGjMLzt49WHn8O2q48eMEHbI9snL/zgjVs37AKAG953gwYBi7safuiS3ftbsgTdS7oNAHSt6JLAipcRtATLliwzBML1N7xPPQngI/MPbWnb3vc9Jxo4uvDMv7bBqwEUAq4GFANWACILJQggKFjzJ12eT2E0itsBoHMfeSIEgLf0fDzYr//FxZA62GhlNqtIt9ZGhqDGlKoEIB2GNbxTpgoiDm17UqzCUxm4zS7efeet+yrJ7UIguuvcixCXNaSql/wgMHCoAFOC4wlYTS/VghmDqrRpKxw3ZZOyDNK6Iqb9NntMd/+4uNonAHYtv8m/dfWaUxOVHtp0SVcflu/KTNty7RtqlTrkeNbIAL5UyaYPX/lzsKX53//sGcVqyDuKw7UFnm3L+46ryIQzWmfeN8eDXVXderoidtky+a6nhLCcCjwbJFPuKhSA4dqOs3USSjdQJGFApDmTSvPMYNZ/VJNavL669dxKLZR1AzPq5YbzvkMtTS4+s+hLvwApc9Xjnz4jjMqSWEiHBBlonc9mxOppF/z66sLhxe88deXRKac81S36v3rbsZeN7BMAu8YS5l+744Yp121asVWFduiF+JKJB+dv7tkR6LO5EgNoVBaQtpApFzOj1KWCw7bBjP6UrUYAAQ4DHhkUCi6aaurzaU9qk4+/bioRlASEaLSRLQSQI94VQSBrJl/9SlQO4TqAoxrlHIVmH7LYfKVUGAmzQ/8yNBRBo2EgKzDaWj2IwfT38kFqq2np/5fqaAilxuLTlpHOOdCDmQcuEbPedG28+vHm/cTh7sD0E5cu/vqD+0QGdi9bxujuxoET5o1WV/+ySAJh+ktv0C1fO8+vRjVNNWvYsqRGuYDmJFElx2t1HNncXyppL0x0WkJJCQgFbWJ26to2eZ6DWq1uOEwSRaTGijU0C6t8w23CeJVSqap1JdGKoBwJKIe1hlE5k2nNehBJvayRGE1MKjFAxcDUTSKbrN9EKhktDpa1qWrtCFICDBYwYRxLJxGueONX9Dd/eaocHDB6v3S2uO/CWWPVZmcec0yVhCga0ISqjV3WiMkIRcYqMlaxtYotKxApImEMw7iCVM4hlVFQrkMKEoqFkBbQTFJbkLQg1RD1pJihGFCWTWQsaWNIGQuVWFLVBKoSkoq0ULEhbSw0QMqTrDxpVeCwyrpWuZKVYdLVxMSRlirUpELDKmFq9AGSECKyHOcZ5oC4bimjciMA8Oyz83jvAwgwuiAcEtYhucU6Ut352Ip2GNasLaw2sNY2AsEkxjAXIi2Isg7gKgIrghnzk60gWLJkASQgaMsw3PhZNP4mFrDGkjVApAn1hBEZINRANQKqsdGxBiItoA1BEcMVFkowAtci5WhylJSJZYSaEGuB2ABRzFY4gtiq7T979LMnuTn2JdyBhVPeONQwOJbxX2va7WFAdbEwYORlsMFKws/+8OAkm+jYaq2tZc1WaDA0W9aSWLsyYc8TEJK0ltBaCm2F1ESkDaCtAphJWGZtCNpY1tpAa0M6NtBxYqkeaxNb1sZabRmabeMXa9LlWpTUIlCoSceWdKyFJibtCWiPWCtlKeVaSjtGC1hd19DVGIlR5NRLXmn+5NNu2Fxc2xXGEYjU1rbWuSUAtCdWwh4BuHgstZAW3pMA8fbK8MGOETGlPQXf8xAohYyjVM7xM+1pFTgihCSD5rSyGc+nrKc46ylOub7M+sqhgJhFpLIpBc/x2XcVp1xlfOkj7SnAMcZSpDK+EoHjOxlXqYyrZOD4Xi5QglyuRYiN5yt2HV+kPSXSrnLTyiu0ecoT0gSO4gkTXNVSID+fg/LzrgOb2XpYrvOo32954N1Vqh1SDwnCBs8zDLq6IP96qUa8R75w+0HtDAAT3cwj60cGaGvcf8qRmfbLV6toC6eIwEzKBYQjkJFBfPDkyTcMmVEn0JWd1ktUo7DPQvkKaYMk5Xg/6Eh54YbyrqrmwI+jWixEY1ZztbRoL7T/WMb1aCSqG7KjViWKfOl5SgGiJuuTc623+J6Idlb9SNjEDRImxzK5ytqgnkF7rv1HGb95dFddWCNHm4XycpFV2+Y4b7n2D+UffbKE4YtrxSRqKaQ82NTDDft8MdDdh33Cgb1Ley0A/OKMDz2rKsnAaFQ95d9O/cI2UU/Kvkdp5SEFJVJQIkgE+6NRTKmacoRmXxoTSKN90pGQOvZtYtymlpzcWqwGYTUJwlqkWCNtQpHWEaUqNe3sGCoKymbdJEkUGfKttn6YRFSvh4gT7Y3U63hxeJTKtUiOVmqoJexFhoK6UX41sc6ukUExVHuxWYpgwqz0yb/48Ik/evsbDjj7hg3ixt7Y2fXxqFrTALnVMtkmb3LfmAe0R8mlPc+FdnZK0dtrpn/+/J/0u8mFJ7XMOn/l8KZP70zrRSIyYFcCQsAppDAnyn1VxrWWXdnofSjXoQQgiQFtkMl6yA/Lr0srTDkffU6XQkgJCBCEZQR5H3LAXt2cD0pRc/2LulKHFAJSNkJoqaYA1O9e3ZzzqqVc6XPl4To8B/AciyAgdExOI9nk//u89oVfjZ2hA/OqbcvW8h/fNlrfdXEsQlGvWq2ZBEsSSufXXnH2nQdRI7bE+8aMGZeD8/rJApiUbb6LJOPJwY0f+/hRZ70vrWWsrY1EYmMkJowroY5hnYggq+VQh3UdViuJLo8mulK24fBwpEeiEJHRcrRU17VaEtYqia5VYl2vJ2GtEmlLluq2bsNKrOOqCaNarONKpJNQh/VyXbuuCByHHVurRroeh7WQUalI1IeDlWZry4dfN+3k7lE90Lx1eMvip3fcf++o2fqeelIWNrTWkaRcAZtNKzSnMr8kItO1h7lhZhZ7DGDfshUGAD51xBsezGjZP5QyR/1szW+XnDjp4LdmC3kvlnAt85iIhYkMOLKkQgMVaqhabFWpZlQ5gYoMccSCNUulGUozlAUUEykIVlZQo6BSQDFBgVhBkCKCEsSKSLAUVqTzymsKPNUkmn48w19w8ikzz3hfYlVq+Ya7b11f/uN9I3bnxSP1clAsJsYayQwIAUCSESpRPDU//TYAOGigfY+478knn5R7XplAxOharM45/uxiW76px7DlNfHAt4UnMufm5p3S6mc2OWnft56UzPCZYBLLWidso7rlMAQSy6gZRkKuEzOobIEQBA2CEY0sH8ZzU7IRdTcALNOYnUhggqkldZNSQSWnm/9jyX6nve6EOQfe4mfXX9K3ree3w3bz10fi0tyhkZqtjhqjteTIkIwtyFqAAeP6ilxOP3XekV96HAxauofJrYULF5pXVdrRhSWWARy534HfyUvPVOLQ3N+/5uanq9uP+ekx71ryT7npF3WwvyLvuKt1rJshhEpi7SaGiVkYgqMtCy3IcStWiJChrSBtJWsjoLUgbQgaAmDpeYZZW0AnTNpY0onRRviu9D1/9Atn/nDZbGfBFWtKfVc+OfjYr4q2/zxta25Ur2nWxhorRWyE1EykLRBpIDJAYgxcz6fm9KTvEBF3rXhVpR306ku7xpTJvGvec9t6W7zA1uLYzQRuLhYbp3vNV7116use/OAZ73zuHT/80utXjmx5y2B59PV1k8zXnvSMZVDawfS6d410Ud+VDS8NaiF8xVBSQDKQafKQGcTV2ZRfrjTXvqBHa1BKQDAjcCXSsd+77LCvvffGLV/+cFEPdLGKlKklRkqCJBYMkGGCNYCxElIAjrSNahOC9QNLeWrZcOlpdxwMUDSeHvjb1MYA6Jo3j7sBetOMhZf/aN1DZ5dErGwl1EPgGWWOr+l6+t/x9afvW1dwUysm5wp9b95v/s1NQVb/ZvvqA9cP75gvWGUnBJnrsxlRa9K10JGx6xCEEICSkt2YdN7jH2TyE8LB6g5NMhMkYb3OKimk4mDDSZOW3HnVC5+9Szvl48MwhCRhhBCSmBvJLmJIWEilAG1hrIC1Aq4ChLBWOimVweQuIgq7li9W3XtYkfDqzZjdmbCnU/Yu7TWvv+YDV6zW/Z835VBLw9Ik1hjNCgJQnguhFFRs4AnxXJOf+e3s9in33P3ur/yKiOrMTEd8+5Kv1IVOMhCxFCwkgVMpz0xPF35SHgmjkixfjKimsulU6huHXX/FfTuvbHu0+MjvI1FpM6FOHAElBJMggiCGBDGEoZagGdWoiJgZbAlaCzCTCbKQeSo8+uWze45Z2ruUel/DnrrXVqnOICztFPyNHmf/n73tye3h6DwKjWEDObbviK2QtpEeNgquAHkOlFLIsFOZkMndfmxmxjVPDmw69UW3ckXkxHAiC5cIQc5FW9H9noAdGMrWv+iyRr4iHz5l6kGXrCw99VDC9QJr1o5qhKikaCxPAlkWiZianRFaTryB6hZyhWooKENsGDZwsuaglkWLLjn58mfGmeDvU+JL4E4ANIPCI1v2f0faOrExDAFiS0RGkIAwiqRVQgkQw1KsTRKGZthWM2vj4Yt6hv/4kGr2d1w57cyZ+chbmViLqBZXiyN1XTfGiYzwh0phUh+xL372kPef85tdT/+kZMJCElnNDGUsw4BgrYA2bMhjUXDb1wvy1++q7SABlw0TBBhCGJ1r8mW73/GFS06+/Jme1wjeeAbjNV2rV6/mxV2L1S8++eNtC05bPDAikjPiJGmU1wo0SiikAAsCpCCtSCjHISICGWsiG/lDKjrzydLmiWtO/caFP1zXd9wo6xmRtiKw6qkIKBddu2R/av/w44OPLC554dt0NUlIkCMIoJeKYUl7WaEyaHq6JbXf41uqa09k20icExFASNI55aST5ju6z/7Jxy7vOk596EP3vua89F7ZJ9LX3afRtVg9+pnrr5/pFa52s77DghMhCSQbhUZWABk/QEsqhzprkgALskoBrEeryVZbPn/W3Z/56UNnfeuslHY21Y3l2LBm2Jw7YgYvmHPUyk1RedlgMTI1I1Q1Aeoa0JZYa9ZuzlF+Urhnojfnhxsrz12QJFZaC7IgaENaetLxTetTy86+6p22y4hlYw7BPwSAjZh/nzGLF6tVn7v5YzP85h+rfMqxxAkEgaWAVBKjuo5pmRY+pGlSJRJGCAgLJrAlJxmuxzt05aTj/+1TV5w7edFbA+WQNsakpMxPCrLX3L3xP893fbiJFlxKQDUtUEtgq9rCzadUxjRfMytz6LfXlFZ+OYp0YExjG4VhTpyUUCluXrOw/aRTiSZVu9C117a/7t3di5s2seUuUbz8mbtmvfGIqSXXLkrYaCklsSQSRLwrKmH/bNszBeGvGeBwfxNpQsKWNCtTDpOaMov2y+RvLQ6NFMC2ZU66ZUVHofmZneG2y8nGWQWIyIIiw5pcIX3l8QTV+s4DMgf/+oni7+6LdZy3GpZICAubeGnHyVLzyoX5U9907uJ37+js6ZTXfei6vXauwt7d7krEWMYcGy2e++SP3j03mPDVdDattGASzEaSIMngxwc3LnKkO3JkZvqXXKjEWBY2TLQERKhjfvDFtVe999CTPjEtaLny9hP/+fshqhNjX05mhvUUc1aCvayvHMquPcidfXAc+1t/veOhh0thmNWJtWBCYq110oGTMs33Htf+9hOWnnTRts69oDT2LYDjIDI46bTyyQ9d97kjs9Pf1upnRqyvpLXGwFiIyNqVw1vP2zEycMC7ph7zxhYZPCrzgTKOkGSR1H0+9Bc7nzngwUtvWE4HHxwPxtUlIdgmJBP2XZHPpmg/kf3WIx+546A1UeXEteHO5UP12KmFZGIDax0WgZ8WTWj/2rUX3H7a6ceePtLFXaJ3H5yhsNc3IDfkIYDVYO5arNZ/4pY/fPDii+7YEY7OrLM5MNKaKNKWaoke4fCwTaX+mZ+Ze+r7ttWLW+rSLE5c4SaCrcdCfeDIM+9asWIFrnus5/NVxJM911N5kX56Vna/s+58z003Pda+5vtDPPr5oXJNGyMMSSg37YkMpZ+dmpn+jm92Xn89syVexnQ8Hb9PqiH2/akdPZ0SS3uNA8Li73506fPFnV8ciasHR0kC0iaB5zh5Nxj6p0lz3rak5cDnv7tp+RUDCN/qa65u/cRthWseuy/4wWM3FR1HDE92mpbd994b/vUDPV9YuGZ47Y9CVA+KK3GcCOGG0kHWyoEZmfxVHzno/f/n6KOPru+LJftnBVd/i1qprq4u0Y1uoBuWmb1jr/rnpdvqxQ+UOD6yRgYxDNJBgP28/L+u+sD3P/HJu6/d/+EX13x5Xq7jU7HV9f7a0Md+dcq1X3JmiPANP3h317AeWZZQDNcyUkSQxnk+cHI/OqZj0Y2fOf1DO3d3M/f12P62RyaNcSMAeELhrJs/f/Take1nFZPaCWUdzeUmP5WNUJ+aavn4Q+/5Pz9YtmIZdR/frQnAqTd/9IzB2uB1JsuT7Uid08p9Iau8h9q94I6bjvvsgzRjRrgbcHscmv+fAeB4nz2dArtxhycUPnbPtdNX7dg8b1tcnJ9S7pwD3eb//OHbu24lIlx6x7ePf6ay+S3VuNLfotJPTckV1l59zrJ1RI0wFAAs7lqs+patMPjfdCBZZ0+nRNdi9Vo4urOnU4Lxdzt8jP5RwOzq6hKrD1pNvWM7AbCsz2C3AGdnT6fsH3u2BEts97JuBuF/7/F3/68wgnwZEfSy/8Vuwnj8f3qZgBa7fbv7893bE68w4FfqC69wb/xdCfzZXjr5UmTyz8cix+6/nCbxFxTMX0sD/6U6j5cOTNv93l94h15+TwjxX94n2u0Atr/czp9m4RUyrONtilfOvtL4O1LKV+xDSvln39J/Y7m9Uj+7j+8vuXKCiNDa2npVa2vrd8dfbG1tfXcul/sVj52B0NnZmc9kMisKhfzXxyMZ8+bNmxgEwa9d133a87xn8vn8bQsXLtyfiNDS0np9oVC4UimFbDbbN3PmzLeOE9nS0nJjU1PTV8YHM2HyhOODIOibMmXKG8cJa2tre7vneb9xPXdlEAQr29raLhujhcZo5ilTppzt+/4zrutub25u/kFnZ2cGgDzhhBMm5HK52xzH2ZZOp5fPnj17PgBMnjz5wmw2++D111/vvJzrpk2bNj8Igr729va3jdMwd+7c41Kp1ENj4/tjS0vLty688ML0y1eQFEIgn8//LpfL/WH58uUKgMpkMt/wfZ+feOIJBwA6OjreLKVkz/OKnZ2d+bFOpzuOw0EQ/KylpeXLvu8XU6nUM47jIJfL/TGbTT/kui583+eOjo7LAajly5erbDa7LgiCX43PblNT001CCM5ms/82Dmo6nb7C8zxubW3uyufz13uex83NzR8dH/js2bNnBkFgUqnUra2trR/1PI9zuVyvUgrpdPpR13WLHR0dn/Z9/5kgCPqZWTU1NV3mBz5fffXV3m4AKgAoFApfFUJwOp3uk7IhDfbff//zXdflTCbzzebm5m+N9XHDGI3yv8gmIqpJKYdPPukkTUTacZxBAOW7776bAKBYLL41k8k8K6XkFStWnDT2DRORZeZrhoaGvlgoFD6otT44jmMphBgEqDZ2foLxfWeAiPTJJ5+slVQjYwklHHfccZkoik5obi78LtHJ4iOOOKJ5jCTjOE44OlrqLpVKlziO8/swDM8ZWyE8MjIy1xgjjj322M8NDg5e3dLS8hbf91fNmjXrAK31ERMnTjxv+/bt31ywYMEpzNzW0dFxvFKqnxpHZO5+GWamMKyfUSgUHrbWHDpz5syZAGCttURkFi5s+eLw8PAnXde9IUmSs8ZoMC8HsF6v1w/J5fO35HK52+r1+jsAVJctW6aXL1+umPnNrut+g5mfCMPwwnFfEAA5jjPr2GOPnVQul08noirQcNkazRKYudLfP3RJPp+/LZfL3VILa7OFEDEAPP/888cw89SOjskfZsutL7zwwoljxAtrrTrrrLOnzpo1a26SJAdLKf8wNiFyypQpjwshdixfvvwPTU1NX+vo6Phdf39/986dO48gIjthwoRVANTvfve7HSAq18JwQWOy/0sqVwDgqVOnzrPM8yZMmPBxa5lHRkbOHKNBApAvvsjzjjrqqGlJkhxHRGvGaXgl7SgApIQQKSJyAAillO3s7DyKiIL+/v6fpNPp27TWJzGzkFJaZtZa6+8+8cQTG5IkOaepqekCKSWPfc+7Od4uEaUApAgkmJmYmcrl8lIhxB/XrFnztFLqsVqtdgERwXEcHcexuu+++1Zu3rx5tVLqj/PmTfuX8TOvVq5cOXDEEUccGgTBz8Mw/MSqVau2TJky5Y1KqYiZSSllx7mEAM3GqHGltGnTJjE2VgWARkdHzxEkdqxfv/5x13UfqNVqS8fktbHWYufOoQefeuqp9UKI9OTJk99vrX3JEhG7DTAdBMEzpVLp7GKxeGYqlboJQJ6IkCTJaUmSiFQq9USlUvmCMTozbdq0ww899NCqlFJ5nvd+3/cvJyJ9+OGHPzY2Q3ZczhJRrr29/TvFYvHMUql0dhAE64wxruM4rLVenCTJgUqplUmSHG6MOVZKCa01O45jFiw44kQiek4IsfPxx5/dNTbz5vDDDz+0WCwuKJVKb7/00kubiOg3g4ODX8/lctsBUKVSKYybN8ycIaIdxhgCwNdcc019zCSKhBCstT4lSZKJUsqVURS9wRhzeE9Pj8vMsRACHR0db1BK/Ye1tr5hw4Y1Y5DZlwNojTHu/Z+/XzGziuM4w8xxkiQURdF5Usr7hRD3uK57M4ChoaGhCy666KIYBCoWixvL5fI3rbXOb3/728vHlq0cPz+GmW0Y1rLMrO6//35ljPGYuXLcccdNttbu73ne95RSP/d9/3vW2rY5c+bMtdpWiUg+/HDf09lstjuKojOnT59+AAANAP39/UesW7fuVx0dHScA0EKIkrU2s2zZsqcBxC9sfOGLJ554Yku+UPi0ZXZmzpz5S611wMz8ute97pBjjjnmoIULF+5/1OFHTdVaL/I870al1M89z/sOM3uXXHLJ8a7rVgAgl8s9PWHChMuCIDhg0qRJZ41NjPovWri5ufnBQqHw6LgGKhQKX0mlUv2HH374olQqxTNnzjxm/INCoXBdOp3edv75509PpVIcBME5AJDP569NpVLxli1bgqampt81NTU94Lou0uk0T548+VIAkFKiUCiszuVyN7a1tX0qlUpVlWrQIqVEOp0abG5u/lpTU9NHstks33vvvV5XV5ebSqWGC4XCLeMasLOz081ms3f5vs9+4Jd9308mTJhwPhFh4sSJbw+CQPu+H3m+xy0tLVc07rd9yvM8TqVSJpVKcaFQ2DBt2rTPp1KBvffee71xMyubza7OZrM98+fPPymVSvEBBxwwAwAuueSS359zzjmrAIiusVNFxu0Znj179kzHccTq1avXj9t4SZIUmpqa+gcHBycvWrToud7eRonvYYcdlqnVatOnT5++bt26dbNaWlo2Pfnkk6Onn356au3atQccffTRzz3yyCOTmJnWr1+/Yfbs2YemUqkdK1euHACAAw888AApZT1JEpUkibNx48b1457G7Nmzp1lrRTabHR0dHZ30jne8Y1V3d7c94IADZmitMxs3bnxmTA6ylBITJ048IgzDie3t7SvXrFmzGYAAkV20cOF+W7duPTSXy21Yv379Gmam+fPntxaLxY5arcbMTKlUKsp7XlSzNli3bt0aIlIA+JBDDplYKpWyc+fO3fbcc8/NSKVSa1avXp089dRTrStWrNjvkUce+UNv776PNf49LvEXXEfxt/CFX+7n0ssI4r/gJ4v/5j69wju7D+iVfFPxMh+a/wJ9u49h/JndzTcWr3D/5b4t/YXxvSINY5wv+vr6/n8U6P9f/yDX/wV8CLfb1aOLBQAAAABJRU5ErkJggg==" style="width:46px;height:46px;object-fit:contain" alt="Harihar Solar Logo">
+    <div>
+      <div class="brand-name">HARIHAR SOLAR</div>
+      <div class="brand-sub">Satna · MP · Since 2020</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+    <div class="lang-tog"><button id="bhi" class="lang-btn on" onclick="setLang('hi')">हिंदी</button><button id="ben" class="lang-btn" onclick="setLang('en')">EN</button></div>
+    <!-- Dark/Light Mode Toggle -->
+    <div onclick="toggleMode()" title="Dark/Light Mode" style="display:flex;align-items:center;gap:6px;cursor:pointer;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.2);border-radius:9px;padding:5px 10px;transition:.2s;user-select:none" id="mode-toggle-btn">
+      <span id="mode-icon" style="font-size:14px">☀️</span>
+      <div style="width:34px;height:18px;border-radius:20px;background:rgba(255,255,255,.15);position:relative;transition:.3s" id="mode-track">
+        <div id="mode-thumb" style="width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>
+      </div>
+    </div>
+    <button class="hbtn hbtn-o" onclick="openAdmin()">⚙️ Admin</button>
+    <button class="hbtn hbtn-o" onclick="openDB()">👥 Customers</button>
+  </div>
+</div>
+<div class="tab-wrap">
+  <div class="tab-box">
+    <button class="tab on" id="tab-form" onclick="setTab('form',this)">📋 Form</button>
+    <button class="tab" id="tab-ppt" onclick="setTab('ppt',this)">📄 Slides</button>
+    <button class="tab" id="tab-res" onclick="setTab('res',this)">📈 Analysis</button>
+    <button class="tab" id="tab-analytics" onclick="setTab('analytics',this)">📊 Analytics</button>
+  </div>
+</div>
+
+<div class="pg on" id="pg-form">
+  <div class="card card-glow">
+    <div class="sec-title">📄 Step 1 — Bill Upload <span style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);border-radius:20px;padding:2px 9px;font-size:8px;font-weight:800;display:inline-flex;align-items:center;gap:4px;color:var(--green2)"><span class="blink" style="background:var(--green2)"></span>AUTO FILL</span></div>
+    <div class="bill-grid">
+      <div><div class="bill-lbl">Bill 1 — Latest</div>
+        <div class="bill-drop" id="bb1"><input type="file" accept="image/*,.pdf" onchange="handleBill(1,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt1">Upload करें</div><div style="font-size:9px;color:rgba(255,255,255,.25)" id="bs1">JPG / PNG / PDF</div></div>
+        <div id="ms1" class="ms-grid" style="display:none"></div><div id="bi1" style="display:none"></div>
+      </div>
+      <div><div class="bill-lbl">Bill 2 — 6 Month Purana</div>
+        <div class="bill-drop" id="bb2"><input type="file" accept="image/*,.pdf" onchange="handleBill(2,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt2">Upload करें</div><div style="font-size:9px;color:rgba(255,255,255,.25)" id="bs2">JPG / PNG / PDF</div></div>
+        <div id="ms2" class="ms-grid" style="display:none"></div><div id="bi2" style="display:none"></div>
+      </div>
+    </div>
+    <div id="fill-msg" style="display:none;margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <div class="sec-title">👤 Step 2 — ग्राहक जानकारी</div>
+    <div class="g2c">
+      <div class="field"><label>नाम</label><input type="text" id="fn" placeholder="Ramesh Sharma" oninput="liveUpdate()"></div>
+      <div class="field"><label>WhatsApp</label><input type="tel" id="fw" placeholder="9876543210" oninput="liveUpdate()"></div>
+      <div class="field"><label>पता</label><input type="text" id="fa" placeholder="Civil Lines, Satna" oninput="liveUpdate()"></div>
+      <div class="field"><label>Consumer ID</label><input type="text" id="fc" placeholder="N1905003728" oninput="liveUpdate()"></div>
+      <div class="field"><label>City / Area</label><input type="text" id="fcity" placeholder="Satna" oninput="liveUpdate()"></div>
+      <div class="field"><label>Connection Date</label><input type="text" id="fcondate" placeholder="01-01-1980" oninput="liveUpdate()"></div>
+      <div class="field"><label>Connection Type</label><select id="fco" onchange="liveUpdate()"><option value="domestic">Domestic (LV 1.2)</option><option value="commercial">Commercial (LT 2)</option><option value="agricultural">Agricultural</option></select></div>
+      <div class="field"><label>Phase (Auto)</label><select id="fphase" onchange="liveUpdate()"><option value="Single">Single Phase</option><option value="Three">Three Phase</option></select></div>
+      <div class="field"><label>Sanctioned Load</label><input type="text" id="fsload" placeholder="2.0 KW" oninput="liveUpdate()"></div>
+      <div class="field"><label>Meter Number</label><input type="text" id="fmeter" placeholder="SCHNEIDEREZ0009961" oninput="liveUpdate()"></div>
+      <div class="field"><label>Roof Type</label><select id="frooftype" onchange="liveUpdate()"><option value="RCC">RCC</option><option value="Tin">Tin</option><option value="Other">Other</option></select></div>
+      <div class="field"><label>Lead Source</label><select id="fleadsrc" onchange="liveUpdate()"><option value="Referral">Referral</option><option value="Facebook">Facebook</option><option value="WhatsApp">WhatsApp</option><option value="Walk-in">Walk-in</option><option value="YouTube">YouTube</option></select></div>
+      <div class="field"><label>Salesman</label><input type="text" id="fsales" placeholder="Avanish" oninput="liveUpdate()"></div>
+      <div class="field"><label>Follow-up Date</label><input type="date" id="ffu" onchange="liveUpdate()"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-title">⚡ Step 3 — 12 Month Units</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:10px">💚 हरे = bill से auto | manually भी बदलें</div>
+    <div class="month-grid" id="mgrid"></div>
+    <div id="lavg" style="margin-top:8px;font-size:11px;color:var(--cyan);font-family:monospace;font-weight:700"></div>
+    <div id="bill-prev" class="bill-prev"><div style="font-size:10px;color:var(--amber2);font-weight:800;margin-bottom:7px">📋 AVG MONTH BILL — MPPKVVCL LV1.2 (Verified)</div><div id="bpc"></div></div>
+    <div class="solar-box" id="solar-box">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div><div style="font-size:9px;color:rgba(255,255,255,.4);font-weight:800;margin-bottom:4px">RECOMMENDED SIZE</div><div class="solar-kw" id="req-val">—</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:3px;font-weight:600" id="req-sub">—</div></div>
+        <div class="field" style="min-width:170px"><label>Final System Size</label>
+          <select id="system-size" onchange="updateSysSize()" style="border-color:var(--amber2);color:var(--amber2);font-size:14px;font-weight:900;padding:9px">
+            <option value="1">1 kW</option><option value="2">2 kW</option><option value="3">3 kW</option><option value="4">4 kW</option><option value="5">5 kW</option><option value="6">6 kW</option><option value="7">7 kW</option><option value="8">8 kW</option><option value="10">10 kW</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07)">
+      <div class="sec-title" style="margin-bottom:10px">🏷️ Brand Select करें</div>
+      <div class="brand-grid" id="brandgrid"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-title">🎯 Step 4 — Options</div>
+    <div class="opt-grid">
+      <div class="opt-card" id="opt-finance" onclick="toggleOpt('finance')"><div class="opt-check" id="chk-finance"></div><div style="font-size:24px">🏦</div><div><div class="opt-txt">Finance / EMI Slide</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">EMI slide add करें</div></div></div>
+      <div class="opt-card" id="opt-compare" onclick="toggleOpt('compare')"><div class="opt-check" id="chk-compare"></div><div style="font-size:24px">📊</div><div><div class="opt-txt">System Comparison</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Multiple sizes compare</div></div></div>
+      <div class="opt-card" id="opt-amc" onclick="toggleOpt('amc')"><div class="opt-check" id="chk-amc"></div><div style="font-size:24px">🛡️</div><div><div class="opt-txt">AMC Include करें</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px">Agreement में AMC charge दिखाएं</div></div></div>
+    </div>
+    <div id="amc-settings" style="display:none;margin-top:12px;background:rgba(20,184,166,.05);border:1.5px solid rgba(20,184,166,.2);border-radius:11px;padding:13px">
+      <div class="g2c">
+        <div class="field"><label>AMC Charge (₹/year)</label><input type="number" id="amc-charge" value="2000" oninput="liveUpdate()"></div>
+        <div class="field"><label>AMC Duration (years)</label><input type="number" id="amc-years" value="5" oninput="liveUpdate()"></div>
+      </div>
+    </div>
+    <div id="fin-settings" style="display:none;margin-top:12px;background:rgba(245,158,11,.05);border:1.5px solid rgba(245,158,11,.2);border-radius:11px;padding:13px">
+      <div class="g3c">
+        <div class="field"><label>Rate</label><select id="fin-rate" onchange="liveUpdate()"><option value="6">6%</option><option value="7">7%</option><option value="8" selected>8%</option><option value="9">9%</option><option value="10">10%</option><option value="12">12%</option></select></div>
+        <div class="field"><label>Tenure</label><select id="fin-tenure" onchange="liveUpdate()"><option value="5">5 yr</option><option value="7" selected>7 yr</option><option value="10">10 yr</option></select></div>
+        <div class="field"><label>Down %</label><select id="fin-down" onchange="liveUpdate()"><option value="0">0%</option><option value="10">10%</option><option value="20" selected>20%</option><option value="30">30%</option></select></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-title">📸 Step 5 — Photos</div>
+    <div class="photo-grid">
+      <label class="photo-box" id="ph-pass"><input type="file" accept="image/*" onchange="loadPhoto('pass',this)"><div style="font-size:24px">👤</div><div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:5px;font-weight:700">Customer</div></label>
+      <label class="photo-box" id="ph-roof"><input type="file" accept="image/*" onchange="loadPhoto('roof',this)"><div style="font-size:24px">🏠</div><div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:5px;font-weight:700">Roof</div></label>
+      <label class="photo-box" id="ph-d3"><input type="file" accept="image/*" onchange="loadPhoto('d3',this)"><div style="font-size:24px">☀️</div><div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:5px;font-weight:700">3D Design</div></label>
+    </div>
+  </div>
+  <div class="calc-wrap"><button class="calc-btn" onclick="calculate()">☀️ &nbsp; CALCULATE — Presentation बनाएं</button></div>
+</div>
+
+<div class="pg" id="pg-ppt"><div id="ppt-empty" style="text-align:center;padding:60px 20px;color:rgba(255,255,255,.2)"><div style="font-size:60px;margin-bottom:15px">📄</div><div style="font-size:16px;font-weight:700">पहले Form भरें और Calculate करें</div></div><div id="ppt-data" style="display:none"></div></div>
+<div class="pg" id="pg-res"><div id="res-empty" style="text-align:center;padding:60px 20px;color:rgba(255,255,255,.2)"><div style="font-size:60px;margin-bottom:15px">📊</div><div style="font-size:16px;font-weight:700">पहले Calculate करें</div></div><div id="res-data" style="display:none"></div></div>
+<div class="pg" id="pg-analytics"><div id="analytics-content"></div></div>
+
+<div class="ov" id="ov-admin">
+  <div class="ob">
+    <div class="ov-head">⚙️ Admin Panel <button class="xbtn" onclick="closeOv('ov-admin')">✕</button></div>
+    <div id="adm-auth"><div class="field" style="margin-bottom:12px"><label>Password</label><input type="password" id="apw" placeholder="••••••••••"></div><button class="calc-btn" onclick="checkAdmin()" style="padding:13px;font-size:14px">🔓 Login</button></div>
+    <div id="adm-panel" style="display:none">
+      <div class="adm-tabs"><button class="adm-tab on" onclick="showAdmTab('elec',this)">⚡ Domestic</button><button class="adm-tab" onclick="showAdmTab('comm',this)">🏢 Commercial</button><button class="adm-tab" onclick="showAdmTab('solar',this)">☀️ Solar</button><button class="adm-tab" onclick="showAdmTab('calc',this)">🧮 Calculator</button><button class="adm-tab" onclick="showAdmTab('sheets',this)">📊 Sheets</button><button class="adm-tab" onclick="showAdmTab('cinfo',this)">🏢 Company</button></div>
+      <div id="adm-elec">
+        <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:9px 12px;margin-bottom:11px;font-size:10px;color:var(--green2);font-weight:700">✅ MPPKVVCL LV1.2 Satna — 12 Bills Verified (Apr 2025 – Feb 2026)</div>
+        <div class="sec-title" style="margin-bottom:9px">Energy Slabs (Verified from actual bills)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:6px;margin-bottom:5px"><span style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700">From</span><span style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700">To</span><span style="font-size:9px;color:rgba(255,255,255,.4);font-weight:700">₹/unit</span><span></span></div>
+        <div id="slab-list"></div>
+        <button class="add-btn" onclick="addSlab()">+ Add Slab</button>
+        <div class="divider"></div>
+        <div class="sec-title" style="margin-bottom:9px">Fixed Charges (₹/kW × Load)</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:8px">Verified from actual bills — changes with unit slab</div>
+        <div id="fc-list"></div>
+        <div class="divider"></div>
+        <div class="g2c" style="margin-bottom:9px">
+          <div class="field"><label>Duty %</label><input type="number" id="fc-duty" value="8"></div>
+          <div class="field"><label>Fuel ₹/unit (avg)</label><input type="number" id="fc-fuel" value="0.024" step="0.001"></div>
+          <div class="field"><label>TOD Rebate ₹/unit (Smart Meter avg)</label><input type="number" id="tod-rate" value="0.362" step="0.001"></div>
+          <div class="field"><label>Interest SD (₹/month)</label><input type="number" id="fc-intsd" value="15"></div>
+        </div>
+        <div class="field" style="margin-bottom:9px"><label>After Solar Min Bill (₹)</label><input type="number" id="fc-minbill" value="75" style="max-width:110px"></div>
+        <div class="divider"></div>
+        <div class="sec-title" style="margin-bottom:9px">PM Surya Ghar Subsidy</div>
+        <div class="g3c">
+          <div class="field"><label>1 kW (₹)</label><input type="number" id="pm-sub1" value="30000"></div>
+          <div class="field"><label>2 kW (₹)</label><input type="number" id="pm-sub2" value="60000"></div>
+          <div class="field"><label>3 kW+ (₹)</label><input type="number" id="pm-sub3" value="78000"></div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-title" style="margin-bottom:9px">Net Metering Rate</div>
+        <div class="field" style="max-width:160px"><label>Feed-in ₹/unit (MPERC)</label><input type="number" id="net-rate" value="3.14" step="0.01"></div>
+      </div>
+      <div id="adm-comm" style="display:none"><div class="g2c"><div class="field"><label>0-50 ₹/unit</label><input type="number" id="cc-r1" value="6.50" step="0.01"></div><div class="field"><label>50+ ₹/unit</label><input type="number" id="cc-r2" value="8.00" step="0.01"></div><div class="field"><label>Fixed 0-50 (₹/kW)</label><input type="number" id="cc-f1" value="88"></div><div class="field"><label>Fixed 50+ (₹/kW)</label><input type="number" id="cc-f2" value="144"></div><div class="field"><label>Duty %</label><input type="number" id="cc-duty" value="8"></div></div></div>
+      <div id="adm-solar" style="display:none">
+        <!-- Brand selector tabs -->
+        <div style="margin-bottom:12px">
+          <div class="sec-title" style="margin-bottom:8px">☀️ Brand-wise Costs (per kW)</div>
+          <div id="brand-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+          <div id="brand-cost-panel"></div>
+        </div>
+        <div class="divider"></div>
+        <!-- Common charges -->
+        <div class="sec-title" style="margin-bottom:8px">🔧 Common Charges (per kW) — सभी brands के साथ</div>
+        <div class="g2c" style="margin-bottom:8px">
+          <div class="field"><label>Structure (₹/kW)</label><input type="number" id="ch-structure" oninput="updateCommon('structure',this.value)"></div>
+          <div class="field"><label>Wiring (₹/kW)</label><input type="number" id="ch-wiring" oninput="updateCommon('wiring',this.value)"></div>
+          <div class="field"><label>Installation (₹/kW)</label><input type="number" id="ch-installation" oninput="updateCommon('installation',this.value)"></div>
+          <div class="field"><label>MPEB Charge (₹/kW)</label><input type="number" id="ch-mpeb" oninput="updateCommon('mpeb',this.value)"></div>
+          <div class="field"><label>Other Expense (₹/kW)</label><input type="number" id="ch-other" oninput="updateCommon('other',this.value)"></div>
+          <div class="field"><label>Margin %</label><input type="number" id="margin" value="20"></div>
+        </div>
+        <!-- Cost summary box -->
+        <div id="cost-summary" style="background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:10px;padding:12px;margin-top:4px">
+          <div style="font-size:9px;color:var(--jade);font-weight:800;letter-spacing:1px;margin-bottom:8px">SELECTED BRAND COST SUMMARY (per kW)</div>
+          <div id="cost-summary-rows"></div>
+        </div>
+        <div class="divider"></div>
+        <button class="add-btn" onclick="addCompany()">+ Add Brand</button>
+      </div>
+      <div id="adm-calc" style="display:none">
+  <div style="background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:8px;padding:9px 12px;margin-bottom:11px;font-size:10px;color:var(--jade);font-weight:700">🧮 Solar System Cost Calculator — Real-time estimate</div>
+  <div class="g2c" style="margin-bottom:12px">
+    <div class="field"><label>System Size (kW)</label><input type="number" id="cc-kw" value="3" step="0.5" min="1" oninput="calcCost()"></div>
+    <div class="field"><label>Brand</label><select id="cc-brand" onchange="calcCost()"><option>Adani</option><option>Waaree</option><option>Loom Solar</option><option>Vikram</option><option>Renewsys</option></select></div>
+    <div class="field"><label>Margin %</label><input type="number" id="cc-margin" value="20" oninput="calcCost()"></div>
+    <div class="field"><label>Avg Monthly Units</label><input type="number" id="cc-units" value="200" oninput="calcCost()"></div>
+  </div>
+  <div id="cc-result" style="background:linear-gradient(145deg,rgba(20,184,166,.08),rgba(34,211,238,.04));border:1px solid rgba(20,184,166,.2);border-radius:12px;padding:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:9px;padding:10px">
+        <div style="font-size:8px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;margin-bottom:4px">Gross Cost</div>
+        <div id="cc-gross" style="font-size:18px;font-weight:900;color:var(--amber2);font-family:monospace">—</div>
+      </div>
+      <div style="text-align:center;background:rgba(255,255,255,.04);border-radius:9px;padding:10px">
+        <div style="font-size:8px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;margin-bottom:4px">PM Subsidy</div>
+        <div id="cc-subsidy-val" style="font-size:18px;font-weight:900;color:var(--green2);font-family:monospace">—</div>
+      </div>
+      <div style="text-align:center;background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.3);border-radius:9px;padding:10px">
+        <div style="font-size:8px;color:var(--jade);font-weight:700;text-transform:uppercase;margin-bottom:4px">Net Cost (Customer)</div>
+        <div id="cc-net" style="font-size:22px;font-weight:900;color:var(--jade);font-family:monospace">—</div>
+      </div>
+      <div style="text-align:center;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:9px;padding:10px">
+        <div style="font-size:8px;color:var(--amber2);font-weight:700;text-transform:uppercase;margin-bottom:4px">Yearly Saving</div>
+        <div id="cc-saving" style="font-size:22px;font-weight:900;color:var(--amber2);font-family:monospace">—</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div style="text-align:center;background:rgba(255,255,255,.03);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:rgba(255,255,255,.35);font-weight:700;margin-bottom:3px">Panels</div>
+        <div id="cc-panels" style="font-size:14px;font-weight:900;color:var(--cyan);font-family:monospace">—</div>
+      </div>
+      <div style="text-align:center;background:rgba(255,255,255,.03);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:rgba(255,255,255,.35);font-weight:700;margin-bottom:3px">Payback</div>
+        <div id="cc-payback" style="font-size:14px;font-weight:900;color:var(--cyan);font-family:monospace">—</div>
+      </div>
+      <div style="text-align:center;background:rgba(255,255,255,.03);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:rgba(255,255,255,.35);font-weight:700;margin-bottom:3px">25yr Profit</div>
+        <div id="cc-profit" style="font-size:14px;font-weight:900;color:var(--green2);font-family:monospace">—</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:10px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:9px;padding:10px;font-size:10px;color:rgba(255,255,255,.4)">
+    💡 Ye calculator quick estimate ke liye hai. Full calculation ke liye Form tab mein 12 month units enter karein.
+  </div>
+</div>
+<div id="adm-sheets" style="display:none"><div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:10px;font-size:11px;color:var(--green2);margin-bottom:12px;font-weight:700">🟢 Google Sheets Connected</div><div class="field"><label>Script URL</label><input type="text" id="sheets-url" value="https://script.google.com/macros/s/AKfycbx8z5YJEtwJO_XmDoWiiRiMFc6MKPDOQ10RVbicfOtGV-AcqJQTb66emvvN1L4XwbM/exec" style="font-size:10px"></div></div>
+      <div id="adm-cinfo" style="display:none"><div class="g2c"><div class="field"><label>Phone</label><input type="text" id="c-ph" value="9876543210"></div><div class="field"><label>Email</label><input type="text" id="c-em" value="harihar@solar.com"></div><div class="field"><label>Instagram</label><input type="text" id="c-ig" value="@harisharsolar"></div><div class="field"><label>Website</label><input type="text" id="c-wb" value="www.harisharsolar.com"></div></div></div>
+      <button class="calc-btn" style="margin-top:15px;padding:13px;font-size:14px" onclick="saveAdmin()">💾 Save All Settings</button>
+    </div>
+  </div>
+</div>
+<div class="ov" id="ov-db">
+  <div class="ob" style="width:min(1000px,95vw)">
+    <div class="ov-head">👥 Customers<div style="display:flex;gap:8px;align-items:center"><button onclick="exportExcel()" style="padding:7px 14px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--jade),var(--jade2));color:#fff;cursor:pointer;font-size:11px;font-weight:800">⬇️ Excel</button><button class="xbtn" onclick="closeOv('ov-db')">✕</button></div></div>
+    <div id="db-content"></div>
+  </div>
+</div>
+
+<script>
+var API_KEY='', SHEETS_URL='https://script.google.com/macros/s/AKfycbx8z5YJEtwJO_XmDoWiiRiMFc6MKPDOQ10RVbicfOtGV-AcqJQTb66emvvN1L4XwbM/exec';
+var LG='hi', SB='Adani', RES=null, SEL_KW=null, LIVE_ACTIVE=false;
+var photos={pass:null,roof:null,d3:null}, OPTS={finance:false,compare:false,amc:false};
+var ML=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MLH=['जन','फर','मार','अप्र','मई','जून','जुल','अग','सित','अक्त','नव','दिस'];
+var MKEYS=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
+
+// ═══════════════════════════════════════════════════
+// VERIFIED CALCULATION ENGINE — 12 Bills Analysis
+// MPPKVVCL LV1.2 Domestic, Satna, 2kW load
+// ═══════════════════════════════════════════════════
+var NET_RATE = 3.14; // MPERC MP feed-in tariff
+
+// Energy slabs — 3-pass verified from 12 actual bills
+var SLABS = lsGet('hs_sv7', [{from:0,to:50,rate:4.45},{from:51,to:150,rate:5.41},{from:151,to:300,rate:6.43},{from:301,to:9999,rate:6.98}]);
+
+// Fixed charges — verified from actual bills (₹/kW × 2kW sanctioned load)
+var FC_SLABS = lsGet('hs_fc7', [
+  {upto:150, fixed:129},   // ₹64.5/kW × 2kW
+  {upto:200, fixed:334},   // ₹167/kW × 2kW  ← BIG JUMP after 150
+  {upto:230, fixed:420},   // ₹210/kW × 2kW
+  {upto:280, fixed:476},   // ₹238/kW × 2kW
+  {upto:400, fixed:644},   // ₹322/kW × 2kW
+  {upto:9999,fixed:924},   // ₹462/kW × 2kW
+]);
+
+var TOD_RATE = lsGet('hs_tod', 0.362); // avg TOD rebate ₹/unit (smart meter)
+var FUEL_RATE = lsGet('hs_fuel', 0.024); // avg fuel surcharge ₹/unit
+var INTEREST_SD = lsGet('hs_isd', 15);  // avg interest on security deposit ₹/month
+var MIN_BILL = lsGet('hs_mb', 75);
+
+var FR = lsGet('hs_fv7', {duty:8, pmSub1:30000, pmSub2:60000, pmSub3:78000, minbill:75});
+var CR = lsGet('hs_cv4', {r1:6.50, r2:8.00, f1:88, f2:144, duty:8});
+var COMPANIES = lsGet('hs_co8', [
+  {name:'Adani',     panel:28000, inverter:12000},
+  {name:'Waaree',    panel:26000, inverter:12000},
+  {name:'Loom Solar',panel:24000, inverter:11000},
+  {name:'Vikram',    panel:27000, inverter:12000},
+  {name:'Renewsys',  panel:22000, inverter:11000}
+]);
+// Common charges (per kW)
+var COMMON_CHARGES = lsGet('hs_cc1', {
+  structure: 4000,
+  wiring:    3000,
+  installation: 2500,
+  mpeb:      1500,
+  other:     1000
+});
+var MARGIN = lsGet('hs_mg4', 20);
+var CINFO = lsGet('hs_ci4', {ph:'9876543210',em:'harihar@solar.com',ig:'@harisharsolar',wb:'www.harisharsolar.com'});
+var DB = lsGet('hs_db', []);
+var BD = {1:null,2:null}, liveTimer = null;
+
+function lsGet(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function gv(id){var el=document.getElementById(id);return el?el.value:'';}
+
+// ═══════════ ACCURATE BILL CALCULATION ═══════════
+function calcEnergy(u){
+  // MPPKVVCL LV1.2 verified slabs (3-pass analysis Apr2025-Feb2026)
+  if(u<=50)   return Math.round(u*4.45*100)/100;
+  if(u<=150)  return Math.round((50*4.45+(u-50)*5.41)*100)/100;
+  if(u<=300)  return Math.round((50*4.45+100*5.41+(u-150)*6.43)*100)/100;
+  return Math.round((50*4.45+100*5.41+150*6.43+(u-300)*6.98)*100)/100;
+}
+
+function calcFixed(u){
+  for(var i=0;i<FC_SLABS.length;i++){
+    if(u<=FC_SLABS[i].upto) return FC_SLABS[i].fixed;
+  }
+  return FC_SLABS[FC_SLABS.length-1].fixed;
+}
+
+function calcDomBill(u){
+  if(u===0)return MIN_BILL;
+  u=parseFloat(u);
+  // Subsidy rules verified from 12 actual bills:
+  // ≤100 units: pay ₹75 (full govt subsidy)
+  // 101-150 units: pay ₹100 (partial subsidy)
+  // >150 units: no subsidy, pay full bill
+  if(u<=100)return MIN_BILL;
+  if(u<=150)return 100;
+  var energy=calcEnergy(u);
+  var fuel=Math.round(u*0.024*100)/100;
+  var fixed=calcFixed(u);
+  var duty=Math.round((energy+fixed)*0.08);
+  return Math.max(MIN_BILL,Math.round(energy+fixed+duty+fuel));
+}
+
+function calcBillBreakdown(u){
+  u=parseFloat(u);
+  var energy=calcEnergy(u);
+  var fuel=Math.round(u*0.024*100)/100;
+  var fixed=calcFixed(u);
+  var duty=Math.round((energy+fixed)*0.08);
+  var gross=energy+fixed+duty+fuel;
+  var subsidy=0,net=gross;
+  if(u<=100){subsidy=-(gross-MIN_BILL);net=MIN_BILL;}
+  else if(u<=150){subsidy=-(gross-100);net=100;}
+  return {energy:Math.round(energy),fuel:Math.round(fuel),fixed:fixed,duty:duty,gross:Math.round(gross),subsidy:Math.round(subsidy),net:Math.max(MIN_BILL,Math.round(net))};
+}
+
+function calcCommBill(u,kw){
+  kw=parseFloat(kw)||2;
+  var e=u<=50?u*CR.r1:50*CR.r1+(u-50)*CR.r2;
+  var f=u<=50?CR.f1*kw:CR.f2*kw;
+  return Math.round(e+f+Math.round((e+f)*CR.duty/100));
+}
+function calcBill(u){return gv('fco')==='commercial'?calcCommBill(u,gv('fsload')):calcDomBill(u);}
+
+function calcSolar(kw){
+  if(kw<=1) return FR.pmSub1;
+  if(kw<=2) return FR.pmSub1+(kw-1)*(FR.pmSub2-FR.pmSub1);
+  if(kw<=3) return FR.pmSub2+(kw-2)*(FR.pmSub3-FR.pmSub2);
+  return FR.pmSub3;
+}
+function calcEMI(p,r,y){var mr=r/(12*100),nn=y*12;if(!mr)return Math.round(p/nn);return Math.round(p*(mr*Math.pow(1+mr,nn))/(Math.pow(1+mr,nn)-1));}
+function getIR(){
+  var c=COMPANIES.find(function(x){return x.name===SB;});
+  if(!c)return 48000;
+  var totalCommon=Object.values(COMMON_CHARGES).reduce(function(a,b){return a+b;},0);
+  return (c.panel+c.inverter+totalCommon);
+}
+function n(x){return Math.round(x).toLocaleString('en-IN');}
+
+// ═══════════ INIT ═══════════
+(function(){
+  var sk=lsGet('hs_apikey','');
+  if(sk) API_KEY=sk;
+  NET_RATE=lsGet('hs_netr',3.14);
+  TOD_RATE=lsGet('hs_tod',0.362);
+  FUEL_RATE=lsGet('hs_fuel',0.024);
+  INTEREST_SD=lsGet('hs_isd',15);
+  // Restore saved mode
+  var savedMode=lsGet('hs_mode','dark');
+  if(savedMode==='light') applyLightMode(true);
+  buildMonthGrid(); buildBrands();
+})();
+
+var IS_DARK=true;
+function applyLightMode(light){
+  IS_DARK=!light;
+  document.body.classList.toggle('light-mode',light);
+  var thumb=document.getElementById('mode-thumb');
+  var track=document.getElementById('mode-track');
+  var icon=document.getElementById('mode-icon');
+  var btn=document.getElementById('mode-toggle-btn');
+  if(light){
+    if(thumb){thumb.style.left='18px';thumb.style.background='#F59E0B';}
+    if(track){track.style.background='rgba(245,158,11,.3)';}
+    if(icon){icon.textContent='🌙';}
+    if(btn){btn.style.background='rgba(245,158,11,.1)';btn.style.borderColor='rgba(245,158,11,.4)';}
+  }else{
+    if(thumb){thumb.style.left='2px';thumb.style.background='#fff';}
+    if(track){track.style.background='rgba(255,255,255,.15)';}
+    if(icon){icon.textContent='☀️';}
+    if(btn){btn.style.background='rgba(255,255,255,.07)';btn.style.borderColor='rgba(255,255,255,.2)';}
+  }
+}
+function toggleMode(){
+  var isLight=document.body.classList.contains('light-mode');
+  applyLightMode(!isLight);
+  lsSet('hs_mode',!isLight?'light':'dark');
+}
+
+function toggleKey(){var r=document.getElementById('key-row');r.style.display=r.style.display==='none'?'block':'none';}
+function saveKey(){var k=document.getElementById('api-inp').value.trim();if(k){API_KEY=k;lsSet('hs_apikey',k);document.getElementById('key-row').style.display='none';alert('✅ API Key saved!');}}
+function setLang(l){LG=l;document.getElementById('bhi').className='lang-btn'+(l==='hi'?' on':'');document.getElementById('ben').className='lang-btn'+(l==='en'?' on':'');buildMonthGrid();}
+function setTab(nm,el){document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});document.getElementById('pg-'+nm).classList.add('on');if(el)el.classList.add('on');if(nm==='analytics')renderAnalytics();}
+function closeOv(id){document.getElementById(id).classList.remove('on');}
+function toggleOpt(key){OPTS[key]=!OPTS[key];var c=document.getElementById('opt-'+key),ch=document.getElementById('chk-'+key);if(OPTS[key]){c.classList.add('on');ch.innerHTML='✓';}else{c.classList.remove('on');ch.innerHTML='';}if(key==='finance')document.getElementById('fin-settings').style.display=OPTS[key]?'block':'none';if(key==='amc'){var amcS=document.getElementById('amc-settings');if(amcS)amcS.style.display=OPTS[key]?'block':'none';}if(LIVE_ACTIVE)liveUpdate();}
+
+function liveUpdate(){if(!LIVE_ACTIVE)return;clearTimeout(liveTimer);liveTimer=setTimeout(doLive,400);}
+function doLive(){
+  if(!RES)return;
+  var u=getUnits(),tot=u.reduce(function(a,b){return a+b;},0),avg=tot>0?tot/12:RES.avg;
+  var bills=u.map(calcBill),yb=bills.reduce(function(a,b){return a+b;},0);
+  var kw=SEL_KW||RES.kw,ir=getIR(),m=1+MARGIN/100,gr=Math.round(kw*ir*m),sub=Math.round(calcSolar(kw)),net=gr-sub;
+  var sg=Math.round(kw*4*365),su=Math.round(avg*12),eg=Math.max(0,sg-su),gi=Math.round(eg*NET_RATE);
+  var ys=Math.round(yb - MIN_BILL*12)+gi,pb=ys>0?parseFloat((net/ys).toFixed(1)):0,s25=Math.round(ys*25-net);
+  var fr=parseFloat(gv('fin-rate'))||8,ft=parseInt(gv('fin-tenure'))||7,fd=parseInt(gv('fin-down'))||20;
+  var da=Math.round(net*fd/100),la=net-da,emi=calcEMI(la,fr,ft);
+  RES=Object.assign(RES,{name:gv('fn')||'Customer',wa:gv('fw'),addr:gv('fa'),cid:gv('fc'),city:gv('fcity'),condate:gv('fcondate'),phase:gv('fphase'),sload:gv('fsload'),meter:gv('fmeter'),conn:gv('fco'),units:u,avg:avg,bills:bills,yearlyBill:yb,kw:kw,panels:Math.ceil(kw*1000/540),gr:gr,sub:sub,net:net,ys:ys,pb:pb,s25:s25,installRate:ir,finRate:fr,finTenure:ft,finDown:fd,downAmt:da,loanAmt:la,emi:emi,monthlySaving:Math.round(ys/12),solarGen:sg,selfUse:su,excessGen:eg,gridIncome:gi});
+  renderPPT();
+}
+
+function buildMonthGrid(){var mg=document.getElementById('mgrid'),labs=LG==='hi'?MLH:ML;mg.innerHTML='';for(var i=0;i<12;i++){var d=document.createElement('div');d.className='mc';d.innerHTML='<label>'+labs[i]+'</label><input type="number" id="u'+i+'" placeholder="—" oninput="updateAvg()">';mg.appendChild(d);}}
+function buildBrands(){var bg=document.getElementById('brandgrid');bg.innerHTML='';[{n:'Adani',t:'Tier 1'},{n:'Waaree',t:'Tier 1'},{n:'Loom Solar',t:'Tier 2'},{n:'Vikram',t:'Tier 1'},{n:'Renewsys',t:'Tier 2'},{n:'Other',t:'—'}].forEach(function(b){var d=document.createElement('div');d.className='brand-btn'+(b.n===SB?' sel':'');d.innerHTML='<span>'+b.n+'</span><small>'+b.t+'</small>';d.onclick=function(){document.querySelectorAll('.brand-btn').forEach(function(x){x.classList.remove('sel');});d.classList.add('sel');SB=b.n;liveUpdate();};bg.appendChild(d);});}
+function getUnits(){return Array.from({length:12},function(_,i){var el=document.getElementById('u'+i);return el?parseFloat(el.value)||0:0;});}
+
+function updateAvg(){
+  var u=getUnits(),tot=u.reduce(function(a,b){return a+b;},0);
+  if(tot>0){
+    var avg=tot/12,yb=u.map(calcBill).reduce(function(a,b){return a+b;},0);
+    document.getElementById('lavg').textContent='Total: '+tot+' | Avg: '+avg.toFixed(0)+'/mo | Yearly Bill: ₹'+n(yb);
+    var ck=Math.max(1,parseFloat((avg/120).toFixed(1)));
+    document.getElementById('req-val').textContent=ck+' kW';
+    document.getElementById('req-sub').textContent='('+avg.toFixed(0)+' ÷ 120 = '+ck+' kW)';
+    var sizes=[1,2,3,4,5,6,7,8,10],best=sizes.find(function(s){return s>=ck;})||10;
+    document.getElementById('system-size').value=best;SEL_KW=best;
+    document.getElementById('solar-box').style.display='block';
+    showBillPrev(Math.round(avg));
+  }else{
+    document.getElementById('lavg').textContent='';
+    document.getElementById('solar-box').style.display='none';
+    document.getElementById('bill-prev').style.display='none';
+  }
+  liveUpdate();
+}
+
+function showBillPrev(u){
+  var bp=document.getElementById('bill-prev'),bc=document.getElementById('bpc');
+  bp.style.display='block';
+  var bk=calcBillBreakdown(u);
+  var h='<div class="bp-row"><span>Energy ('+u+' units × avg rate)</span><span style="color:var(--amber2);font-weight:700">₹'+bk.energy+'</span></div>';
+  h+='<div class="bp-row"><span>Fixed Charge</span><span style="color:var(--amber2);font-weight:700">₹'+bk.fixed+'</span></div>';
+  h+='<div class="bp-row"><span>Electricity Duty (8%)</span><span style="color:var(--amber2);font-weight:700">₹'+bk.duty+'</span></div>';
+  if(bk.tod<0)h+='<div class="bp-row"><span style="color:var(--cyan)">TOD Rebate (Smart Meter est.)</span><span style="color:var(--cyan);font-weight:700">₹'+bk.tod+'</span></div>';
+  h+='<div class="bp-row"><span style="color:rgba(255,255,255,.4)">Fuel Surcharge</span><span style="color:rgba(255,255,255,.4)">₹'+bk.fuel+'</span></div>';
+  if(bk.subsidy<0)h+='<div class="bp-row"><span style="color:var(--green2)">Govt Subsidy (≤150u)</span><span style="color:var(--green2);font-weight:700">₹'+bk.subsidy+'</span></div>';
+  h+='<div class="bp-row" style="font-weight:800;font-size:13px;padding-top:7px"><span style="color:var(--cyan)">✅ Est. Bill</span><span style="color:var(--cyan)">₹'+bk.net+'</span></div>';
+  if(u>50)h+='<div style="font-size:9px;color:rgba(255,255,255,.3);margin-top:5px">* TOD rebate = avg from 12 bills. Actual depends on daytime usage.</div>';
+  bc.innerHTML=h;
+}
+
+function showMS(num,months){var el=document.getElementById('ms'+num),labs=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];el.style.display='grid';el.innerHTML=MKEYS.map(function(k,i){var ok=months&&months[k]>0;return '<div class="ms-cell '+(ok?'ms-ok':'ms-no')+'">'+(ok?'✓':'')+labs[i]+'</div>';}).join('');}
+function updateSysSize(){SEL_KW=parseInt(gv('system-size'));liveUpdate();}
+function loadPhoto(key,inp){if(!inp.files[0])return;var r=new FileReader();r.onload=function(e){photos[key]=e.target.result;var box=document.getElementById('ph-'+key);var img=box.querySelector('img');if(!img){img=document.createElement('img');box.appendChild(img);}img.src=e.target.result;box.querySelectorAll(':not(input):not(img)').forEach(function(el){el.style.opacity='0';});if(LIVE_ACTIVE)liveUpdate();};r.readAsDataURL(inp.files[0]);}
+
+async function handleBill(num,inp){
+  if(!inp.files[0])return;
+  if(!API_KEY){alert('❌ API Key nahi hai!\n\n"🔑 API Key" button se key enter karo.');inp.value='';return;}
+  var file=inp.files[0],box=document.getElementById('bb'+num),bt=document.getElementById('bt'+num),bs=document.getElementById('bs'+num),bi=document.getElementById('bi'+num);
+  box.classList.add('processing');bt.innerHTML='<span class="spinner"></span>Reading...';bs.textContent='Please wait...';
+  var reader=new FileReader();
+  reader.onload=async function(e){
+    var b64=e.target.result.split(',')[1],mt=file.type||'image/jpeg';
+    if(file.type==='application/pdf')mt='image/jpeg';
+    var prompt='Read this MPPKVVCL electricity bill. Return ONLY valid JSON:\n{"name":"","address":"","consumer_id":"","meter_number":"","connection_date":"","sanctioned_load":"","phase":"Single or Three","connection_type":"domestic","months":{"jan":null,"feb":null,"mar":null,"apr":null,"may":null,"jun":null,"jul":null,"aug":null,"sep":null,"oct":null,"nov":null,"dec":null}}\nExtract last 6 months unit consumption from "Last Six Months Consumption" table. Return ONLY JSON.';
+    try{
+      var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:800,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:b64}},{type:'text',text:prompt}]}]})});
+      if(!resp.ok){var err=await resp.json();throw new Error('API: '+(err.error?err.error.message:resp.status));}
+      var data=await resp.json();
+      var parsed=JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+      BD[num]=parsed;box.classList.remove('processing');box.classList.add('loaded');
+      var found=MKEYS.filter(function(k){return parsed.months&&parsed.months[k]>0;});
+      bt.innerHTML='✅ '+found.length+' months found!';bs.textContent=file.name.substring(0,22);
+      showMS(num,parsed.months);
+      var ih='<div class="info-box">';
+      if(parsed.name)ih+='<div class="irow"><span>👤 Name</span><span style="color:var(--amber2);font-weight:700">'+parsed.name+'</span></div>';
+      if(parsed.consumer_id)ih+='<div class="irow"><span>🆔 ID</span><span style="color:var(--amber2);font-weight:700">'+parsed.consumer_id+'</span></div>';
+      if(parsed.phase)ih+='<div class="irow"><span>⚡ Phase</span><span style="color:var(--jade);font-weight:700">'+parsed.phase+'</span></div>';
+      ih+='</div>';bi.innerHTML=ih;bi.style.display='block';autoFill();
+    }catch(err){
+      box.classList.remove('processing');
+      var em=err.message||'Unknown error';
+      if(em.includes('401')||em.includes('auth')){bt.innerHTML='❌ Wrong API Key';bs.textContent='Key galat hai';API_KEY='';lsSet('hs_apikey','');}
+      else if(em.includes('fetch')||em.includes('Network')){bt.innerHTML='🌐 Network Error';bs.textContent='Internet check karo';}
+      else{bt.innerHTML='⚠️ Error';bs.textContent=em.substring(0,35);}
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function autoFill(){
+  var b1=BD[1],b2=BD[2],src=b1||b2;if(!src)return;
+  var set=function(id,val){var el=document.getElementById(id);if(el&&val&&!el.value)el.value=val;};
+  set('fn',src.name);set('fa',src.address);set('fc',src.consumer_id);set('fmeter',src.meter_number);set('fcondate',src.connection_date);set('fsload',src.sanctioned_load);
+  if(src.phase){var ph=document.getElementById('fphase');if(ph)ph.value=src.phase.toLowerCase().includes('three')?'Three':'Single';}
+  if(src.connection_type){var ct=src.connection_type.toLowerCase(),co=document.getElementById('fco');if(co)co.value=ct.includes('comm')?'commercial':ct.includes('agri')?'agricultural':'domestic';}
+  MKEYS.forEach(function(k,i){var val=null;if(b1&&b1.months&&b1.months[k]>0)val=b1.months[k];if(b2&&b2.months&&b2.months[k]>0)val=b2.months[k];if(val!==null){var inp=document.getElementById('u'+i);if(inp){inp.value=val;inp.classList.add('filled');}}});
+  updateAvg();
+  var fm=document.getElementById('fill-msg');fm.style.display='block';
+  fm.innerHTML='<div style="background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.3);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--jade);font-weight:700">✅ Bill से सब auto-fill! Ready!</div>';
+}
+
+function calculate(){
+  var u=getUnits(),tot=u.reduce(function(a,b){return a+b;},0),avg=tot>0?tot/12:200;
+  var bills=u.map(calcBill),yb=bills.reduce(function(a,b){return a+b;},0);
+  var kw=SEL_KW||Math.max(1,Math.ceil(avg/120))||2,panels=Math.ceil(kw*1000/540),ir=getIR(),m=1+MARGIN/100;
+  var gr=Math.round(kw*ir*m),sub=Math.round(calcSolar(kw)),net=gr-sub;
+  var sg=Math.round(kw*4*365),su=Math.round(avg*12),eg=Math.max(0,sg-su),gi=Math.round(eg*NET_RATE);
+  var ys=Math.round(yb-MIN_BILL*12)+gi,pb=ys>0?parseFloat((net/ys).toFixed(1)):0,s25=Math.round(ys*25-net);
+  var fr=parseFloat(gv('fin-rate'))||8,ft=parseInt(gv('fin-tenure'))||7,fd=parseInt(gv('fin-down'))||20;
+  var da=Math.round(net*fd/100),la=net-da,emi=calcEMI(la,fr,ft);
+  RES={name:gv('fn')||'Customer',wa:gv('fw'),addr:gv('fa'),cid:gv('fc'),city:gv('fcity'),condate:gv('fcondate'),conn:gv('fco'),phase:gv('fphase'),sload:gv('fsload'),meter:gv('fmeter'),roofType:gv('frooftype'),leadSrc:gv('fleadsrc'),sales:gv('fsales'),followup:gv('ffu'),units:u,avg:avg,bills:bills,yearlyBill:yb,kw:kw,panels:panels,gr:gr,sub:sub,net:net,ys:ys,pb:pb,s25:s25,brand:SB,date:new Date().toLocaleDateString('en-IN'),installRate:ir,solarGen:sg,selfUse:su,excessGen:eg,gridIncome:gi,finRate:fr,finTenure:ft,finDown:fd,downAmt:da,loanAmt:la,emi:emi,monthlySaving:Math.round(ys/12)};
+  RES.amcCharge=OPTS.amc?parseInt(gv('amc-charge'))||2000:0;RES.amcYears=OPTS.amc?parseInt(gv('amc-years'))||5:0;LIVE_ACTIVE=true;renderPPT();renderRes();setTab('ppt',document.getElementById('tab-ppt'));
+}
+
+var LSVG='<img src="data:image/png;base64,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dqxfv/5x13UfqNVqS8fktbHWYufOoQefeuqp9UKI9OTJk99vrX3JEhG7DTAdBMEzpVLp7GKxeGYqlboJQJ6IkCTJaUmSiFQq9USlUvmCMTozbdq0ww899NCqlFJ5nvd+3/cvJyJ9+OGHPzY2Q3ZczhJRrr29/TvFYvHMUql0dhAE64wxruM4rLVenCTJgUqplUmSHG6MOVZKCa01O45jFiw44kQiek4IsfPxx5/dNTbz5vDDDz+0WCwuKJVKb7/00kubiOg3g4ODX8/lctsBUKVSKYybN8ycIaIdxhgCwNdcc019zCSKhBCstT4lSZKJUsqVURS9wRhzeE9Pj8vMsRACHR0db1BK/Ye1tr5hw4Y1Y5DZlwNojTHu/Z+/XzGziuM4w8xxkiQURdF5Usr7hRD3uK57M4ChoaGhCy666KIYBCoWixvL5fI3rbXOb3/728vHlq0cPz+GmW0Y1rLMrO6//35ljPGYuXLcccdNttbu73ne95RSP/d9/3vW2rY5c+bMtdpWiUg+/HDf09lstjuKojOnT59+AAANAP39/UesW7fuVx0dHScA0EKIkrU2s2zZsqcBxC9sfOGLJ554Yku+UPi0ZXZmzpz5S611wMz8ute97pBjjjnmoIULF+5/1OFHTdVaL/I870al1M89z/sOM3uXXHLJ8a7rVgAgl8s9PWHChMuCIDhg0qRJZ41NjPovWri5ufnBQqHw6LgGKhQKX0mlUv2HH374olQqxTNnzjxm/INCoXBdOp3edv75509PpVIcBME5AJDP569NpVLxli1bgqampt81NTU94Lou0uk0T548+VIAkFKiUCiszuVyN7a1tX0qlUpVlWrQIqVEOp0abG5u/lpTU9NHstks33vvvV5XV5ebSqWGC4XCLeMasLOz081ms3f5vs9+4Jd9308mTJhwPhFh4sSJbw+CQPu+H3m+xy0tLVc07rd9yvM8TqVSJpVKcaFQ2DBt2rTPp1KBvffee71xMyubza7OZrM98+fPPymVSvEBBxwwAwAuueSS359zzjmrAIiusVNFxu0Znj179kzHccTq1avXj9t4SZIUmpqa+gcHBycvWrToud7eRonvYYcdlqnVatOnT5++bt26dbNaWlo2Pfnkk6Onn356au3atQccffTRzz3yyCOTmJnWr1+/Yfbs2YemUqkdK1euHACAAw888AApZT1JEpUkibNx48b1457G7Nmzp1lrRTabHR0dHZ30jne8Y1V3d7c94IADZmitMxs3bnxmTA6ylBITJ048IgzDie3t7SvXrFmzGYAAkV20cOF+W7duPTSXy21Yv379Gmam+fPntxaLxY5arcbMTKlUKsp7XlSzNli3bt0aIlIA+JBDDplYKpWyc+fO3fbcc8/NSKVSa1avXp089dRTrStWrNjvkUce+UNv776PNf49LvEXXEfxt/CFX+7n0ssI4r/gJ4v/5j69wju7D+iVfFPxMh+a/wJ9u49h/JndzTcWr3D/5b4t/YXxvSINY5wv+vr6/n8U6P9f/yDX/wV8CLfb1aOLBQAAAABJRU5ErkJggg==" width="28" height="28" style="object-fit:contain;vertical-align:middle" alt="HS">';
+
+function makePie(pv,pc){var sz=110,tot=pv.reduce(function(a,b){return a+b;},0),cx=sz/2,cy=sz/2,r=sz/2-5,angle=-Math.PI/2,svg='<svg width="'+sz+'" height="'+sz+'">';pv.forEach(function(p,i){var sl=(p/tot)*2*Math.PI,x1=cx+r*Math.cos(angle),y1=cy+r*Math.sin(angle),x2=cx+r*Math.cos(angle+sl),y2=cy+r*Math.sin(angle+sl),lg=sl>Math.PI?1:0;svg+='<path d="M '+cx+' '+cy+' L '+x1.toFixed(1)+' '+y1.toFixed(1)+' A '+r+' '+r+' 0 '+lg+' 1 '+x2.toFixed(1)+' '+y2.toFixed(1)+' Z" fill="'+pc[i]+'"/>';angle+=sl;});svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+(r*.4)+'" fill="rgba(255,255,255,.9)"/>';return svg+'</svg>';}
+
+function makeTL(net,ys,pb){
+  var w=280,h=80,yrs=25,mx=Math.max(ys*yrs-net,1);
+  var svg='<svg width="'+w+'" height="'+h+'" xmlns="http://www.w3.org/2000/svg"><rect width="'+w+'" height="'+h+'" fill="rgba(255,255,255,.05)" rx="8"/><line x1="25" y1="'+(h-14)+'" x2="'+w+'" y2="'+(h-14)+'" stroke="rgba(255,255,255,.2)" stroke-width="1"/>';
+  var pts='';
+  for(var yr=0;yr<=yrs;yr++){var cum=ys*yr-net,x=25+(yr/yrs)*(w-28),y=(h-14)-(Math.max(-net,Math.min(cum,mx))/mx)*(h-26);if(yr===0)pts='M '+x.toFixed(1)+' '+y.toFixed(1);else pts+=' L '+x.toFixed(1)+' '+y.toFixed(1);}
+  svg+='<path d="'+pts+' L '+(w-3)+' '+(h-14)+' L 25 '+(h-14)+' Z" fill="rgba(34,197,94,.2)"/><path d="'+pts+'" fill="none" stroke="#22C55E" stroke-width="2.5"/>';
+  var pbX=25+(pb/yrs)*(w-28);
+  svg+='<line x1="'+pbX.toFixed(1)+'" y1="4" x2="'+pbX.toFixed(1)+'" y2="'+(h-14)+'" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="4,3"/><text x="'+(pbX+3).toFixed(1)+'" y="14" font-size="9" fill="#F59E0B" font-weight="700" font-family="Segoe UI,sans-serif">'+pb+' yr</text>';
+  return svg+'</svg>';
+}
+
+function renderPPT(){
+  if(!RES)return;
+  var R=RES,labs=LG==='hi'?MLH:ML,m=1+MARGIN/100,ir=R.installRate;
+  document.getElementById('ppt-empty').style.display='none';
+  var pv=[Math.round(R.kw*ir*m*.50),Math.round(R.kw*ir*m*.17),Math.round(R.kw*ir*m*.10),Math.round(R.kw*ir*m*.07),Math.round(R.kw*ir*m*.09),Math.round(R.kw*ir*m*.07)];
+  var pn=['Solar Panels','Inverter','Structure','Wiring','Installation','Others'],pc=['#1976D2','#14B8A6','#D97706','#7B1FA2','#E91E63','#00796B'];
+  var mbf=Math.round(R.yearlyBill/12),pieSVG=makePie(pv,pc),tlSVG=makeTL(R.net,R.ys,R.pb);
+  var wam='☀️ *HARIHAR SOLAR*\n━━━━━━━━━━━━━\n👤 *'+R.name+' जी*\n📍 '+(R.addr||'Satna')+'\n\n⚡ Avg: *'+Math.round(R.avg)+' units/month*\nYearly Bill: *₹'+n(R.yearlyBill)+'*\n\n☀️ *'+R.kw+' kW ('+R.brand+')*\nNet Cost: *₹'+n(R.net)+'*\nYearly Saving: *₹'+n(R.ys)+'*\nPayback: *'+R.pb+' yr*\n25yr Profit: *₹'+n(R.s25)+'*\n\n📞 '+CINFO.ph+' | Harihar Solar ☀️';
+
+  var sl='<div class="slides-wrap">';
+
+  // SLIDE 1: COVER
+  sl+='<div class="slide"><div class="sl-cover"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'+LSVG.replace('width="24" height="24"','width="38" height="38"')+'<div><div style="font-size:17px;font-weight:900;color:#FFF;text-shadow:0 0 15px rgba(245,158,11,.6)">HARIHAR SOLAR</div><div style="font-size:8px;color:#5EEAD4;letter-spacing:3px;font-weight:700">SATNA · MP</div></div></div><div style="height:1px;background:linear-gradient(90deg,var(--amber),var(--jade),var(--cyan),transparent);margin-bottom:14px"></div><div class="cover-body"><div class="cover-info"><div style="font-size:20px;font-weight:900;color:#FFF;margin-bottom:2px">'+(R.name||'Customer')+'</div><div style="font-size:10px;color:rgba(255,255,255,.3);margin-bottom:11px">'+(R.addr||'Satna, MP')+'</div>';
+  [['🆔 Consumer ID',R.cid||'—'],['📋 Meter No.',R.meter||'—'],['📅 Connection',R.condate||'—'],['🔌 Type',R.conn||'Domestic'],['⚡ Phase',(R.phase||'Single')+' Phase'],['⚡ Load',R.sload||'—']].forEach(function(x){sl+='<div class="ci-row"><span class="ci-lbl">'+x[0]+'</span><span class="ci-val">'+x[1]+'</span></div>';});
+  sl+='</div>'+(photos.pass?'<img src="'+photos.pass+'" style="width:90px;height:115px;object-fit:cover;border-radius:12px;border:3px solid rgba(245,158,11,.6);flex-shrink:0">':'<div style="width:90px;height:115px;border-radius:12px;border:2px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0"><div style="font-size:28px">👤</div></div>')+'</div><div class="cover-stats">';
+  [['☀️',R.kw+' kW','System'],['⚡',R.panels+'','Panels'],['💰','₹'+n(R.net),'Net Cost'],['📅',R.pb+' Yr','Payback'],['💚','₹'+n(R.ys),'Yr Saving']].forEach(function(x){sl+='<div class="cs-box"><div style="font-size:14px">'+x[0]+'</div><div class="cs-val">'+x[1]+'</div><div class="cs-lbl">'+x[2]+'</div></div>';});
+  sl+='</div><div style="text-align:center;margin-top:12px"><span style="background:rgba(20,184,166,.15);border:1px solid rgba(20,184,166,.3);border-radius:20px;padding:4px 15px;font-size:9px;color:#5EEAD4;font-weight:700">☀️ SOLAR PROPOSAL · '+R.date+'</span></div></div></div>';
+
+  // SLIDE 2: UNITS
+  var maxU=Math.max.apply(null,R.units.concat([1]));
+  var bSVG='<svg width="100%" height="100" viewBox="0 0 310 100" preserveAspectRatio="none"><rect width="310" height="100" fill="white" rx="6"/>';
+  R.units.forEach(function(u,i){
+    var bw=21,bh=u>0?Math.max(5,Math.round((u/maxU)*62)):3,x=i*(bw+4)+4,y=72-bh;
+    bSVG+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+(i>=4&&i<=7?'#D97706':'#14B8A6')+'" rx="3"/>';
+    bSVG+='<text x="'+(x+bw/2)+'" y="88" text-anchor="middle" font-size="7" fill="#94A3B8" font-weight="700">'+labs[i]+'</text>';
+    if(u>0)bSVG+='<text x="'+(x+bw/2)+'" y="'+(y-4)+'" text-anchor="middle" font-size="7" fill="#374151" font-weight="800">'+u+'</text>';
+  });bSVG+='</svg>';
+  sl+='<div class="slide"><div class="sl-white"><div class="sl-logo-r">'+LSVG+'<span style="font-size:10px;font-weight:800;color:#0D9488">HARIHAR SOLAR</span></div><div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:8px"><div style="flex:1"><div class="sl-tagj">बिजली खपत विश्लेषण</div><div class="sl-h2" style="margin-bottom:8px">Month-wise Units और Bill</div></div><div style="text-align:center"><div style="font-size:8px;color:#64748B;font-weight:700;margin-bottom:4px">BIJLI BILL</div><svg width="90" height="90" viewBox="0 0 155 155" xmlns="http://www.w3.org/2000/svg">  <defs>    <radialGradient id="sbgA" cx="50%" cy="42%"><stop offset="0%" stop-color="#E2E4E8"/><stop offset="50%" stop-color="#C8CACF"/><stop offset="100%" stop-color="#A4A7AE"/></radialGradient>  </defs>  <circle cx="77" cy="77" r="74" fill="url(#sbgA)"/>  <ellipse cx="38" cy="38" rx="24" ry="16" fill="#9EA1A8" opacity=".50"/>  <ellipse cx="68" cy="28" rx="22" ry="14" fill="#A4A7AE" opacity=".42"/>  <ellipse cx="100" cy="34" rx="22" ry="15" fill="#9EA1A8" opacity=".46"/>  <ellipse cx="122" cy="50" rx="18" ry="12" fill="#9EA1A8" opacity=".38"/>  <ellipse cx="22" cy="52" rx="16" ry="11" fill="#9EA1A8" opacity=".36"/>  <circle cx="52" cy="72" r="10" fill="#5A5D63"/>  <circle cx="103" cy="72" r="10" fill="#5A5D63"/>  <path d="M50 108 Q77 92 104 108" stroke="#5A5D63" stroke-width="6" fill="none" stroke-linecap="round"/>  <circle cx="77" cy="77" r="74" fill="none" stroke="#484B52" stroke-width="7"/></svg></div></div>'+bSVG+'<div style="background:#FFF8E7;border:1.5px solid #D97706;border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;gap:16px;align-items:center"><div style="font-size:8px;font-weight:800;color:#92400E;letter-spacing:1px">MPPKVVCL TARIFF (LV1.2)</div><div style="font-size:9px;color:#374151;display:flex;gap:12px"><span>0-50u <b>₹4.45</b></span><span>51-150u <b>₹5.41</b></span><span>151-300u <b>₹6.43</b></span><span>301+u <b>₹6.98</b></span></div></div>';
+  sl+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin:11px 0"><thead><tr style="background:#F1F5F9"><th style="padding:4px 6px;text-align:left;color:#64748B;font-size:8px">Month</th><th style="padding:4px 6px;text-align:center;color:#64748B;font-size:8px">Units</th><th style="padding:4px 6px;text-align:right;color:#64748B;font-size:8px">Bill ₹</th><th style="padding:4px 6px;text-align:left;color:#64748B;font-size:8px">Month</th><th style="padding:4px 6px;text-align:center;color:#64748B;font-size:8px">Units</th><th style="padding:4px 6px;text-align:right;color:#64748B;font-size:8px">Bill ₹</th></tr></thead><tbody>';
+  for(var i=0;i<6;i++){sl+='<tr style="background:'+(i%2===0?'#fff':'#F8FAFC')+'"><td style="padding:3px 6px;font-weight:700;color:#374151;font-size:10px">'+labs[i]+'</td><td style="padding:3px 6px;text-align:center;color:#374151;font-size:10px">'+R.units[i]+'</td><td style="padding:3px 6px;text-align:right;color:#D97706;font-weight:700;font-size:10px">'+n(R.bills[i])+'</td><td style="padding:3px 6px;font-weight:700;color:#374151;font-size:10px">'+labs[i+6]+'</td><td style="padding:3px 6px;text-align:center;color:#374151;font-size:10px">'+R.units[i+6]+'</td><td style="padding:3px 6px;text-align:right;color:#D97706;font-weight:700;font-size:10px">'+n(R.bills[i+6])+'</td></tr>';}
+  sl+='</tbody></table><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px">';
+  [['Yearly Bill','₹'+n(R.yearlyBill),'#FEF2F2','#DC2626'],['Avg/Month','₹'+n(mbf),'#FFF7ED','#D97706'],['After Solar','₹'+MIN_BILL+'/mo','#F0FDF4','#16A34A']].forEach(function(x){sl+='<div style="background:'+x[2]+';border-radius:8px;padding:7px;text-align:center;border-left:3px solid '+x[3]+'"><div style="font-size:8px;color:#64748B;font-weight:700">'+x[0]+'</div><div style="font-size:13px;font-weight:900;color:'+x[3]+'">'+x[1]+'</div></div>';});
+  sl+='</div></div></div>';
+
+  // SLIDE 3: ROI — Clean, Readable, Dark Background, No Lines
+  var dg=(R.kw*4).toFixed(1);
+  var mg2=Math.round(R.kw*4*30);
+  var yg=R.solarGen;
+  var billSaving=Math.round(R.yearlyBill-MIN_BILL*12);
+  sl+='<div class="slide"><div class="roi-slide">';
+  sl+='<div style="display:flex;gap:14px;align-items:center;margin-bottom:16px"><div style="flex:1"><div style="font-size:18px;font-weight:900;color:#FFF;letter-spacing:.5px">Solar से आपका फ़ायदा ☀️</div><div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:3px">Step by Step — '+R.kw+' kW System</div></div><svg width="90" height="90" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">  <defs>    <radialGradient id="hbgA" cx="50%" cy="50%"><stop offset="0%" stop-color="#FFF5C0"/><stop offset="55%" stop-color="#FFE07A"/><stop offset="100%" stop-color="#F5C030"/></radialGradient>    <radialGradient id="blLA" cx="50%" cy="50%"><stop offset="0%" stop-color="#F09010" stop-opacity=".45"/><stop offset="100%" stop-color="#F09010" stop-opacity="0"/></radialGradient>    <radialGradient id="blRA" cx="50%" cy="50%"><stop offset="0%" stop-color="#F09010" stop-opacity=".45"/><stop offset="100%" stop-color="#F09010" stop-opacity="0"/></radialGradient>  </defs>  <circle cx="75" cy="75" r="72" fill="url(#hbgA)"/>  <circle cx="75" cy="75" r="72" fill="none" stroke="#D4900A" stroke-width="4.5"/>  <ellipse cx="34" cy="96" rx="19" ry="13" fill="url(#blLA)"/>  <ellipse cx="116" cy="96" rx="19" ry="13" fill="url(#blRA)"/>  <circle cx="33" cy="95" r="5" fill="#D07808" opacity=".75"/>  <line x1="33" y1="86" x2="33" y2="89" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="33" y1="101" x2="33" y2="104" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="24" y1="95" x2="27" y2="95" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="39" y1="95" x2="42" y2="95" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="26" y1="88" x2="28" y2="90" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="38" y1="88" x2="40" y2="90" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="26" y1="102" x2="28" y2="100" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="38" y1="102" x2="40" y2="100" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <circle cx="117" cy="95" r="5" fill="#D07808" opacity=".75"/>  <line x1="117" y1="86" x2="117" y2="89" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="117" y1="101" x2="117" y2="104" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="108" y1="95" x2="111" y2="95" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="123" y1="95" x2="126" y2="95" stroke="#D07808" stroke-width="2" stroke-linecap="round" opacity=".75"/>  <line x1="110" y1="88" x2="112" y2="90" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="122" y1="88" x2="124" y2="90" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="110" y1="102" x2="112" y2="100" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <line x1="122" y1="102" x2="124" y2="100" stroke="#D07808" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>  <path d="M44 62 Q56 54 68 62" stroke="#3A2800" stroke-width="5.5" fill="none" stroke-linecap="round"/>  <path d="M82 62 Q94 54 106 62" stroke="#3A2800" stroke-width="5.5" fill="none" stroke-linecap="round"/>  <path d="M46 104 Q75 130 104 104" stroke="#3A2800" stroke-width="5" fill="none" stroke-linecap="round"/></svg><svg width="120" height="100" viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg">  <rect width="160" height="130" rx="10" fill="#E8F4FD"/>  <circle cx="128" cy="26" r="16" fill="#FFD97A"/>  <g stroke="#F5A623" stroke-width="2.5" stroke-linecap="round">    <line x1="128" y1="4" x2="128" y2="8"/><line x1="146" y1="10" x2="143" y2="13"/>    <line x1="152" y1="26" x2="148" y2="26"/><line x1="146" y1="42" x2="143" y2="39"/>    <line x1="110" y1="10" x2="113" y2="13"/><line x1="104" y1="26" x2="108" y2="26"/>  </g>  <rect x="28" y="76" width="88" height="48" rx="3" fill="#4A90D9"/>  <polygon points="18,76 72,32 126,76" fill="#2C5F8A"/>  <rect x="58" y="96" width="24" height="28" rx="3" fill="#1A3A5C"/>  <rect x="34" y="86" width="20" height="18" rx="2" fill="#AED6F1"/>  <line x1="44" y1="86" x2="44" y2="104" stroke="#2C5F8A" stroke-width="1.5"/>  <line x1="34" y1="95" x2="54" y2="95" stroke="#2C5F8A" stroke-width="1.5"/>  <rect x="90" y="86" width="20" height="18" rx="2" fill="#AED6F1"/>  <line x1="100" y1="86" x2="100" y2="104" stroke="#2C5F8A" stroke-width="1.5"/>  <line x1="90" y1="95" x2="110" y2="95" stroke="#2C5F8A" stroke-width="1.5"/>  <g transform="rotate(-31 72 54)">    <rect x="34" y="44" width="76" height="28" rx="4" fill="#14B8A6" stroke="#0D9488" stroke-width="1.2"/>    <line x1="47" y1="44" x2="47" y2="72" stroke="rgba(255,255,255,.4)" stroke-width="1"/>    <line x1="60" y1="44" x2="60" y2="72" stroke="rgba(255,255,255,.4)" stroke-width="1"/>    <line x1="73" y1="44" x2="73" y2="72" stroke="rgba(255,255,255,.4)" stroke-width="1"/>    <line x1="86" y1="44" x2="86" y2="72" stroke="rgba(255,255,255,.4)" stroke-width="1"/>    <line x1="34" y1="58" x2="110" y2="58" stroke="rgba(255,255,255,.4)" stroke-width="1"/>  </g>  <path d="M118 36 Q100 46 90 52" stroke="#F5A623" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="4,3" opacity=".8"/>  <rect x="0" y="122" width="160" height="8" fill="#7EC850" opacity=".6"/></svg></div>';
+  
+
+  sl+='<div class="roi-step"><div class="roi-num">1</div><div style="flex:1"><div class="roi-label">Solar Generation — रोज कितनी बिजली बनेगी?</div><div class="roi-calc">'+R.kw+' kW × 4 घंटे धूप = '+dg+' units/day<br>'+dg+' × 365 दिन = <strong>'+n(yg)+' units/साल</strong></div><div class="roi-result">✅ आपका Solar साल में '+n(yg)+' units बनाएगा</div></div></div>';
+
+  sl+='<div class="roi-step amber"><div class="roi-num" style="background:var(--amber2)">2</div><div style="flex:1"><div class="roi-label">आपकी बिजली खपत</div><div class="roi-calc">Average '+Math.round(R.avg)+' units/month × 12 = <strong>'+n(R.selfUse)+' units/साल</strong></div><div class="roi-result" style="color:var(--amber2)">📊 आपकी जरूरत = '+n(R.selfUse)+' units</div></div></div>';
+
+  if(R.excessGen>0){
+    sl+='<div class="roi-step cyan"><div class="roi-num" style="background:var(--cyan2)">3</div><div style="flex:1"><div class="roi-label">Extra बिजली — Net Metering Income</div><div class="roi-calc">'+n(yg)+' − '+n(R.selfUse)+' = <strong>'+n(R.excessGen)+' extra units</strong><br>'+n(R.excessGen)+' units × ₹'+NET_RATE+'/unit (MPERC rate)</div><div class="roi-result" style="color:var(--cyan)">💰 Grid Income = ₹'+n(R.gridIncome)+'/साल</div></div></div>';
+  }
+
+  sl+='<div class="roi-step green"><div class="roi-num" style="background:var(--green)">4</div><div style="flex:1"><div class="roi-label">बिजली बिल में बचत</div><div class="roi-calc">अभी बिल: ₹'+n(mbf)+'/month × 12 = ₹'+n(R.yearlyBill)+'/साल<br>Solar के बाद: ₹'+MIN_BILL+'/month × 12 = ₹'+n(MIN_BILL*12)+'/साल</div><div class="roi-result">💡 Bill Saving = ₹'+n(billSaving)+'/साल</div></div></div>';
+
+  sl+='<div style="background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(20,184,166,.1));border:2px solid rgba(34,197,94,.4);border-radius:14px;padding:16px;margin-top:4px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="text-align:center"><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700">TOTAL YEARLY SAVING</div><div style="font-size:28px;font-weight:900;color:var(--green2);font-family:monospace">₹'+n(R.ys)+'</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:3px">Bill Saving + Grid Income</div></div><div style="text-align:center"><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:700">PAYBACK PERIOD</div><div style="font-size:28px;font-weight:900;color:var(--amber2);font-family:monospace">'+R.pb+' साल</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:3px">₹'+n(R.net)+' ÷ ₹'+n(R.ys)+'/yr</div></div></div><div style="margin-top:14px"><div style="font-size:10px;color:rgba(255,255,255,.4);margin-bottom:6px;font-weight:700">25 YEAR PROFIT TIMELINE</div>'+tlSVG+'</div><div style="text-align:center;margin-top:12px"><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px">25 साल का शुद्ध मुनाफ़ा</div><div style="font-size:24px;font-weight:900;color:var(--amber3);font-family:monospace">₹'+n(R.s25)+'</div></div></div>';
+  sl+='</div></div>';
+
+  // SLIDE 4: COST BREAKDOWN
+  sl+='<div class="slide"><div class="sl-white"><div class="sl-logo-r">'+LSVG+'<span style="font-size:10px;font-weight:800;color:#0D9488">HARIHAR SOLAR</span></div><div class="sl-tag" style="color:#D97706">Investment</div><div class="sl-h2">'+R.kw+' kW — '+R.brand+' System</div><div style="display:flex;gap:14px;align-items:flex-start">'+pieSVG+'<div style="flex:1">';
+  pn.forEach(function(nm,i){sl+='<div class="sl-pc" style="border-left-color:'+pc[i]+'"><span style="color:#374151;font-weight:600">'+nm+'</span><span style="font-weight:800;color:#1a1a2e">₹'+n(pv[i])+'</span></div>';});
+  sl+='<div class="sl-pc" style="background:#FFF8E7;border-left:3px solid #D97706"><span style="color:#92400E;font-weight:600">PM Surya Ghar Subsidy</span><span style="font-weight:800;color:#16A34A">−₹'+n(R.sub)+'</span></div><div class="sl-total"><span>💰 Net Cost (आपका)</span><span>₹'+n(R.net)+'</span></div></div></div><div class="sl-kpi"><div class="sl-kp"><div class="sl-kv">₹'+n(R.monthlySaving)+'</div><div class="sl-kl">Monthly Saving</div></div><div class="sl-kp"><div class="sl-kv">'+R.pb+' yr</div><div class="sl-kl">Payback</div></div><div class="sl-kp"><div class="sl-kv">₹'+n(R.s25)+'</div><div class="sl-kl">25yr Profit</div></div></div></div></div>';
+
+  // SLIDE 5: FINANCE (optional)
+  if(OPTS.finance){
+    var nse=R.monthlySaving-R.emi;
+    sl+='<div class="slide"><div class="sl-dark" style="background:linear-gradient(145deg,#080820,#101040)"><div class="sl-logo-rw">'+LSVG+'<span style="font-size:10px;font-weight:800;color:var(--amber2)">HARIHAR SOLAR</span></div><div class="sl-h2w">🏦 EMI पर Solar!</div><div style="background:rgba(255,255,255,.07);border-radius:14px;padding:16px;text-align:center;margin:12px 0;border:1px solid rgba(245,158,11,.2)"><div style="font-size:10px;color:rgba(255,255,255,.4);font-weight:700;margin-bottom:5px">MONTHLY EMI</div><div style="font-size:34px;font-weight:900;color:var(--amber2);font-family:monospace">₹'+n(R.emi)+'</div><div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px">'+R.finTenure+' yr · '+R.finRate+'% · Down ₹'+n(R.downAmt)+'</div></div>'+(nse>0?'<div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:11px;padding:12px;text-align:center"><div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px">Saving − EMI = हर महीने बचत</div><div style="font-size:22px;font-weight:900;color:#4ade80">+₹'+n(nse)+'/mo</div></div>':'')+'</div></div>';
+  }
+
+  // SLIDE 6: COMPARISON (optional)
+  if(OPTS.compare){
+    sl+='<div class="slide"><div class="sl-white"><div class="sl-logo-r">'+LSVG+'<span style="font-size:10px;font-weight:800;color:#0D9488">HARIHAR SOLAR</span></div><div class="sl-tagj">Comparison</div><div class="sl-h2">कौन सा Size सही?</div><table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="background:#0A1628"><th style="padding:8px;text-align:center;color:var(--amber2);font-size:9px">Size</th><th style="padding:8px;text-align:center;color:var(--amber2);font-size:9px">Net Cost</th><th style="padding:8px;text-align:center;color:var(--amber2);font-size:9px">Yr Saving</th><th style="padding:8px;text-align:center;color:var(--amber2);font-size:9px">Payback</th></tr></thead><tbody>';
+    [1,2,3,4,5,6].forEach(function(sz){var g=Math.round(sz*R.installRate*m),s=Math.round(calcSolar(sz)),nt=g-s,ysv=Math.round(R.yearlyBill-MIN_BILL*12),pb2=ysv>0?(nt/ysv).toFixed(1):'—',sel=sz===R.kw;sl+='<tr style="background:'+(sel?'#ECFDF5':'#fff')+'"><td style="padding:8px;text-align:center;font-weight:900;color:'+(sel?'#0D9488':'#374151')+'">'+sz+' kW'+(sel?' ⭐':'')+'</td><td style="padding:8px;text-align:center;color:#374151">₹'+n(nt)+'</td><td style="padding:8px;text-align:center;color:#D97706;font-weight:700">₹'+n(ysv)+'</td><td style="padding:8px;text-align:center;font-weight:700;color:#374151">'+pb2+' yr</td></tr>';});
+    sl+='</tbody></table></div></div>';
+  }
+
+  // SLIDE 7: WHY HARIHAR
+  var amcCharge=OPTS.amc?parseInt(document.getElementById('amc-charge')?.value||2000):0;
+  var amcYears=OPTS.amc?parseInt(document.getElementById('amc-years')?.value||5):0;
+  sl+='<div class="slide"><div class="sl-dark"><div class="sl-logo-rw">'+LSVG+'<span style="font-size:10px;font-weight:800;color:#22C55E">HARIHAR SOLAR</span></div><div class="sl-tag" style="text-align:center">हमारे बारे में</div><div class="sl-h2w" style="text-align:center;margin-bottom:18px;font-size:18px">Harihar Solar ही क्यों? 🏆</div>';
+  [['🎨','3D Visualization पहले','Satna में सिर्फ हम करते हैं'],['📍','100% Local — Satna','24/7 support'],['📄','सारा Paperwork Free','Subsidy, Net Metering सब हम'],['🛡️',OPTS.amc?(amcYears+' Year AMC — ₹'+n(amcCharge)+'/yr'):'5 Year AMC Free',OPTS.amc?'Included in cost':'25 साल Warranty'],['⚡','Fast Installation','7-10 दिन में complete'],['🌱','Eco Friendly','CO₂ free, green energy']].forEach(function(x){sl+='<div class="why-item"><div class="why-ico">'+x[0]+'</div><div><div style="font-size:12px;font-weight:700;color:#fff">'+x[1]+'</div><div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px">'+x[2]+'</div></div></div>';});
+  sl+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+['📞 '+CINFO.ph,'📸 '+CINFO.ig,'🌐 '+CINFO.wb].map(function(x){return '<div class="cpill">'+x+'</div>';}).join('')+'</div></div></div>';
+
+  // SLIDE 8: THANK YOU
+  sl+='<div class="slide"><div class="sl-cover"><div style="text-align:center;padding:10px 0">'+LSVG.replace('width="24" height="24"','width="55" height="55" style="margin:0 auto 12px;display:block"')+'<div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:4px">धन्यवाद, '+R.name+' जी! 🙏</div><div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:18px">आपके उज्जवल भविष्य के लिए ☀️</div><div style="background:rgba(245,158,11,.12);border:2px solid rgba(245,158,11,.3);border-radius:14px;padding:15px;display:inline-block;margin-bottom:15px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left">';
+  [['System',R.kw+' kW'],['Brand',R.brand],['Net Cost','₹'+n(R.net)],['Monthly Saving','₹'+n(R.monthlySaving)],['Payback',R.pb+' yr'],['25yr Profit','₹'+n(R.s25)]].forEach(function(x){sl+='<div><div style="font-size:8px;color:rgba(255,255,255,.3);font-weight:700">'+x[0]+'</div><div style="font-size:13px;font-weight:900;color:var(--amber2)">'+x[1]+'</div></div>';});
+  sl+='</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">'+['📞 '+CINFO.ph,'✉️ '+CINFO.em,'📍 Satna, MP'].map(function(x){return '<div class="cpill">'+x+'</div>';}).join('')+'</div></div></div></div>';
+  sl+='</div>';
+
+  document.getElementById('ppt-data').style.display='block';
+  document.getElementById('ppt-data').innerHTML=
+    '<div style="background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:10px;padding:10px 14px;margin-bottom:13px;font-size:11px;color:var(--jade);font-weight:700;display:flex;align-items:center;gap:8px"><div class="blink"></div>Form change → Slides live update</div>'+
+    '<div class="ppt-actions"><button class="pa-btn pa-save" onclick="saveC()">💾 Save</button><button class="pa-btn pa-wa" onclick="copyWA(\''+encodeURIComponent(wam)+'\')">💬 WhatsApp</button><button class="pa-btn pa-pdf" onclick="printPresentation()">🖨️ Print</button><button class="pa-btn pa-agr" onclick="printAgreement()">📝 Agreement</button></div>'+
+    '<div id="copy-done" style="display:none;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:9px;padding:10px;margin-bottom:12px;text-align:center;font-size:12px;color:#4ade80;font-weight:700">✅ WhatsApp Message Copied!</div>'+sl;
+}
+
+function renderRes(){
+  if(!RES)return;
+  var R=RES,labs=LG==='hi'?MLH:ML;
+  document.getElementById('res-empty').style.display='none';
+  var maxU=Math.max.apply(null,R.units.concat([1]));
+  var bars=R.units.map(function(u,i){var h=u>0?Math.max(5,Math.round((u/maxU)*64)):2;return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:100%;height:'+h+'px;background:'+(i>=4&&i<=7?'var(--amber)':'var(--jade)')+';border-radius:3px 3px 0 0"></div><div style="font-size:7px;color:rgba(255,255,255,.35)">'+labs[i]+'</div></div>';}).join('');
+  var html='<div style="background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2);border-radius:12px;padding:14px;margin-bottom:14px"><div style="font-size:16px;font-weight:900;color:var(--amber2)">'+R.name+' — Analysis</div><div style="font-size:11px;color:rgba(255,255,255,.35)">'+R.kw+' kW · '+R.brand+' · '+R.date+'</div></div>';
+  html+='<div class="kpi-grid">';
+  [[Math.round(R.avg)+'u','Avg/Month'],[R.kw+' kW','System'],['₹'+n(R.ys),'Yr Saving'],[R.pb+' yr','Payback'],['₹'+n(R.s25),'25yr']].forEach(function(x){html+='<div class="kpi-card"><div class="kpi-val">'+x[0]+'</div><div class="kpi-lbl">'+x[1]+'</div></div>';});
+  html+='</div>';
+  html+='<div class="card"><div class="sec-title">⚡ Units Chart</div><div style="display:flex;align-items:flex-end;gap:4px;height:70px">'+bars+'</div></div>';
+  html+='<div class="card"><div class="sec-title">☀️ Net Metering Breakdown</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">';
+  [['Solar Generation',n(R.solarGen)+' units','var(--amber2)'],['Self Use',n(R.selfUse)+' units','var(--jade)'],['Grid Export',n(R.excessGen)+' units','var(--cyan)']].forEach(function(x){html+='<div style="text-align:center;background:rgba(255,255,255,.03);border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,.07)"><div style="font-size:15px;font-weight:900;color:'+x[2]+'">'+x[1]+'</div><div style="font-size:9px;color:rgba(255,255,255,.35);margin-top:4px;font-weight:700">'+x[0]+'</div></div>';});
+  html+='</div><div style="margin-top:11px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:9px;padding:11px;text-align:center"><div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:4px">Grid Income @ ₹'+NET_RATE+'/unit (MPERC MP)</div><div style="font-size:20px;font-weight:900;color:#22C55E">₹'+n(R.gridIncome)+'/year</div></div></div>';
+  html+='<div class="card"><div class="sec-title">📋 Bill Calculation Sample (Avg '+Math.round(R.avg)+' units)</div>';
+  var bk=calcBillBreakdown(Math.round(R.avg));
+  html+='<div style="font-size:11px"><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6)"><span>Energy Charges</span><span style="color:var(--amber2)">₹'+bk.energy+'</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6)"><span>Fixed Charge</span><span style="color:var(--amber2)">₹'+bk.fixed+'</span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6)"><span>Electricity Duty (8%)</span><span style="color:var(--amber2)">₹'+bk.duty+'</span></div>';
+  if(bk.tod<0)html+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6)"><span>TOD Rebate (Smart Meter avg)</span><span style="color:var(--cyan)">₹'+bk.tod+'</span></div>';
+  if(bk.subsidy<0)html+='<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.6)"><span>Govt Subsidy (≤150 units)</span><span style="color:var(--green2)">₹'+bk.subsidy+'</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;padding:7px 0;font-weight:800;font-size:13px"><span style="color:var(--cyan)">Est. Monthly Bill</span><span style="color:var(--cyan)">₹'+bk.net+'</span></div></div></div>';
+  document.getElementById('res-data').style.display='block';
+  document.getElementById('res-data').innerHTML=html;
+}
+
+function printPresentation(){
+  // Print all slides
+  document.querySelectorAll('.pg').forEach(function(p){p.style.display='none';});
+  document.getElementById('pg-ppt').style.display='block';
+  window.print();
+  // Restore after print
+  setTimeout(function(){
+    document.querySelectorAll('.pg').forEach(function(p){p.style.display='none';});
+    document.getElementById('pg-ppt').style.display='block';
+    document.getElementById('pg-ppt').classList.add('on');
+  }, 1000);
+}
+
+function printAgreement(){
+  if(!RES){alert('Pehle Calculate karein!');return;}
+  var R=RES;
+  // Open agreement in new window for separate print
+  var agr=window.open('','_blank','width=800,height=700');
+  agr.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Solar Agreement — '+R.name+'</title><style>');
+  agr.document.write('body{font-family:Segoe UI,sans-serif;margin:30px;color:#1a1a2e;background:#fff;max-width:700px;margin:30px auto}');
+  agr.document.write('h1{font-size:20px;font-weight:900;color:#1A2E4A;text-align:center;margin-bottom:4px}');
+  agr.document.write('h2{font-size:12px;color:#64748B;text-align:center;margin-bottom:24px;font-weight:400}');
+  agr.document.write('.box{background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:16px;margin-bottom:16px;font-size:11px;line-height:1.9;color:#475569}');
+  agr.document.write('.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}');
+  agr.document.write('.sig-box{border:1.5px solid #E2E8F0;border-radius:8px;padding:16px}');
+  agr.document.write('.sig-label{font-size:9px;color:#64748B;font-weight:700;letter-spacing:.5px;margin-bottom:50px}');
+  agr.document.write('.sig-line{border-top:1.5px solid #CBD5E1;padding-top:8px}');
+  agr.document.write('.sig-name{font-size:13px;font-weight:700;color:#1A2E4A}');
+  agr.document.write('.sig-sub{font-size:10px;color:#94A3B8;margin-top:3px}');
+  agr.document.write('.header-bar{display:flex;align-items:center;gap:10px;border-bottom:2px solid #E2E8F0;padding-bottom:12px;margin-bottom:20px}');
+  agr.document.write('.stamp{width:70px;height:70px;border:2px dashed #CBD5E1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#CBD5E1;text-align:center}');
+  agr.document.write('.footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:12px;border-top:1px solid #E2E8F0}');
+  agr.document.write('.row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #F1F5F9;font-size:11px}');
+  agr.document.write('@media print{body{margin:20px}@page{margin:15mm}}');
+  agr.document.write('</style></head><body>');
+  agr.document.write('<div class="header-bar">');
+  agr.document.write('<img src="data:image/png;base64,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dqxfv/5x13UfqNVqS8fktbHWYufOoQefeuqp9UKI9OTJk99vrX3JEhG7DTAdBMEzpVLp7GKxeGYqlboJQJ6IkCTJaUmSiFQq9USlUvmCMTozbdq0ww899NCqlFJ5nvd+3/cvJyJ9+OGHPzY2Q3ZczhJRrr29/TvFYvHMUql0dhAE64wxruM4rLVenCTJgUqplUmSHG6MOVZKCa01O45jFiw44kQiek4IsfPxx5/dNTbz5vDDDz+0WCwuKJVKb7/00kubiOg3g4ODX8/lctsBUKVSKYybN8ycIaIdxhgCwNdcc019zCSKhBCstT4lSZKJUsqVURS9wRhzeE9Pj8vMsRACHR0db1BK/Ye1tr5hw4Y1Y5DZlwNojTHu/Z+/XzGziuM4w8xxkiQURdF5Usr7hRD3uK57M4ChoaGhCy666KIYBCoWixvL5fI3rbXOb3/728vHlq0cPz+GmW0Y1rLMrO6//35ljPGYuXLcccdNttbu73ne95RSP/d9/3vW2rY5c+bMtdpWiUg+/HDf09lstjuKojOnT59+AAANAP39/UesW7fuVx0dHScA0EKIkrU2s2zZsqcBxC9sfOGLJ554Yku+UPi0ZXZmzpz5S611wMz8ute97pBjjjnmoIULF+5/1OFHTdVaL/I870al1M89z/sOM3uXXHLJ8a7rVgAgl8s9PWHChMuCIDhg0qRJZ41NjPovWri5ufnBQqHw6LgGKhQKX0mlUv2HH374olQqxTNnzjxm/INCoXBdOp3edv75509PpVIcBME5AJDP569NpVLxli1bgqampt81NTU94Lou0uk0T548+VIAkFKiUCiszuVyN7a1tX0qlUpVlWrQIqVEOp0abG5u/lpTU9NHstks33vvvV5XV5ebSqWGC4XCLeMasLOz081ms3f5vs9+4Jd9308mTJhwPhFh4sSJbw+CQPu+H3m+xy0tLVc07rd9yvM8TqVSJpVKcaFQ2DBt2rTPp1KBvffee71xMyubza7OZrM98+fPPymVSvEBBxwwAwAuueSS359zzjmrAIiusVNFxu0Znj179kzHccTq1avXj9t4SZIUmpqa+gcHBycvWrToud7eRonvYYcdlqnVatOnT5++bt26dbNaWlo2Pfnkk6Onn356au3atQccffTRzz3yyCOTmJnWr1+/Yfbs2YemUqkdK1euHACAAw888AApZT1JEpUkibNx48b1457G7Nmzp1lrRTabHR0dHZ30jne8Y1V3d7c94IADZmitMxs3bnxmTA6ylBITJ048IgzDie3t7SvXrFmzGYAAkV20cOF+W7duPTSXy21Yv379Gmam+fPntxaLxY5arcbMTKlUKsp7XlSzNli3bt0aIlIA+JBDDplYKpWyc+fO3fbcc8/NSKVSa1avXp089dRTrStWrNjvkUce+UNv776PNf49LvEXXEfxt/CFX+7n0ssI4r/gJ4v/5j69wju7D+iVfFPxMh+a/wJ9u49h/JndzTcWr3D/5b4t/YXxvSINY5wv+vr6/n8U6P9f/yDX/wV8CLfb1aOLBQAAAABJRU5ErkJggg==" style="width:50px;height:50px;object-fit:contain" alt="Harihar Solar">');
+  agr.document.write('<div><div style="font-size:16px;font-weight:900;color:#1A2E4A">HARIHAR SOLAR</div><div style="font-size:9px;color:#64748B;letter-spacing:2px">SATNA · MADHYA PRADESH</div></div>');
+  agr.document.write('</div>');
+  agr.document.write('<h1>सौर ऊर्जा प्रणाली समझौता</h1>');
+  agr.document.write('<h2>Solar System Installation Agreement</h2>');
+  agr.document.write('<div class="box">');
+  agr.document.write('<b style="color:#1A2E4A">दिनांक / Date:</b> '+R.date+'<br><br>');
+  agr.document.write('यह समझौता <b>Harihar Solar, Satna</b> (आपूर्तिकर्ता) और <b style="color:#0D9488">'+R.name+'</b> (ग्राहक) के बीच किया जा रहा है।<br><br>');
+  agr.document.write('<b>Customer Details:</b><br>');
+  agr.document.write('पता / Address: '+(R.addr||'—')+'<br>');
+  agr.document.write('WhatsApp: '+(R.wa||'—')+'<br>');
+  agr.document.write('Consumer ID: '+(R.cid||'—')+' | Meter No: '+(R.meter||'—')+'<br><br>');
+  agr.document.write('<b>System Details:</b><br>');
+  agr.document.write('System Size: <b>'+R.kw+' kW</b> | Brand: <b>'+R.brand+'</b> | Panels: <b>'+R.panels+' nos</b><br>');
+  agr.document.write('Net Metering Registration: सहित / Included<br><br>');
+  agr.document.write('<b>Cost Details:</b>');
+  agr.document.write('</div>');
+  // Cost table
+  agr.document.write('<div class="box" style="padding:12px">');
+  [['Gross Cost','₹'+R.gr.toLocaleString('en-IN')],['PM Surya Ghar Subsidy','-₹'+R.sub.toLocaleString('en-IN')],['Net Cost (Customer payable)','₹'+R.net.toLocaleString('en-IN')],['Expected Yearly Saving','₹'+R.ys.toLocaleString('en-IN')],['Payback Period',R.pb+' years'],['25-Year Profit','₹'+R.s25.toLocaleString('en-IN')]].forEach(function(r){
+    agr.document.write('<div class="row"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>');
+  });
+  agr.document.write('</div>');
+  agr.document.write('<div class="box">');
+  agr.document.write('<b>Terms & Conditions:</b><br>');
+  var amcLine=OPTS.amc?'1. '+RES.amcYears+' साल AMC (Annual Maintenance Contract) — ₹'+RES.amcCharge+'/year शामिल है।':'1. 5 साल Free AMC (Annual Maintenance Contract) शामिल है।';
+  agr.document.write(amcLine+'<br>');
+  agr.document.write('2. Solar panels पर 25 साल की performance warranty।<br>');
+  agr.document.write('3. Net Metering registration का सारा paperwork Harihar Solar करेगा।<br>');
+  agr.document.write('4. PM Surya Ghar Yojana subsidy apply करने में पूरी सहायता।<br>');
+  agr.document.write('5. Installation 7-10 working days में complete होगी।<br>');
+  agr.document.write('6. Payment schedule: as agreed between both parties।');
+  agr.document.write('</div>');
+  agr.document.write('<div class="sig-grid">');
+  agr.document.write('<div class="sig-box"><div class="sig-label">ग्राहक हस्ताक्षर / Customer Signature</div><div class="sig-line"><div class="sig-name">'+R.name+'</div><div class="sig-sub">'+(R.addr||'Satna, MP')+'</div><div class="sig-sub">📱 '+(R.wa||'—')+'</div></div></div>');
+  agr.document.write('<div class="sig-box"><div class="sig-label">विक्रेता हस्ताक्षर / Seller Signature</div><div class="sig-line"><div class="sig-name">Harihar Solar</div><div class="sig-sub">Satna, Madhya Pradesh</div><div class="sig-sub">📞 '+CINFO.ph+'</div></div></div>');
+  agr.document.write('</div>');
+  agr.document.write('<div class="footer"><div style="font-size:9px;color:#94A3B8">Consumer ID: '+(R.cid||'—')+' | Meter: '+(R.meter||'—')+'</div><div class="stamp">Company<br>Seal</div></div>');
+  agr.document.write('</body></html>');
+  agr.document.close();
+  setTimeout(function(){agr.print();},500);
+}
+
+function copyWA(e){var m=decodeURIComponent(e);if(navigator.clipboard){navigator.clipboard.writeText(m).then(function(){var d=document.getElementById('copy-done');if(d)d.style.display='block';});}else{var t=document.createElement('textarea');t.value=m;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);var d=document.getElementById('copy-done');if(d)d.style.display='block';}}
+
+async function saveC(){if(!RES)return alert('Pehle calculate karein!');var R=RES,rec={serial:DB.length+1,date:R.date,name:R.name,wa:R.wa,city:R.city||'',addr:R.addr,cid:R.cid,meter:R.meter||'',conn:R.conn,phase:R.phase,sload:R.sload||'',brand:R.brand,avgUnits:Math.round(R.avg),kw:R.kw,panels:R.panels,grossCost:R.gr,subsidy:R.sub,netCost:R.net,yearlySaving:R.ys,payback:R.pb,s25yr:R.s25,financeOption:OPTS.finance?'Yes':'No',emiAmount:OPTS.finance?R.emi:'',leadSource:R.leadSrc||'',followup:R.followup||'',paymentStatus:'Unpaid',projectStatus:'Lead',salesman:R.sales||''};DB.push(rec);lsSet('hs_db',DB);try{await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(rec)});alert('✅ Saved!');}catch(e){alert('✅ Locally saved!');}}
+
+function renderAnalytics(){var el=document.getElementById('analytics-content');if(!DB.length){el.innerHTML='<div style="text-align:center;padding:60px;color:rgba(255,255,255,.2)"><div style="font-size:60px">📊</div><div style="font-size:16px;font-weight:700;margin-top:13px">कोई customer नहीं</div></div>';return;}var tN=n(DB.reduce(function(a,b){return a+(b.netCost||0);},0)),tK=DB.reduce(function(a,b){return a+(b.kw||0);},0).toFixed(1);var html='<div class="stat-grid">';[['👥',DB.length,'Total Customers'],['💰','₹'+tN,'Total Revenue'],['⚡',tK+' kW','Total Installed']].forEach(function(x){html+='<div class="stat-card"><div style="font-size:22px;margin-bottom:4px">'+x[0]+'</div><div class="stat-val">'+x[1]+'</div><div class="stat-lbl">'+x[2]+'</div></div>';});html+='</div>';el.innerHTML=html;}
+
+function openDB(){var el=document.getElementById('db-content');if(!DB.length){el.innerHTML='<div style="text-align:center;padding:30px;color:rgba(255,255,255,.3)">📭 No customers yet</div>';}else{var h='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr>'+['#','Name','kW','Net Cost','Status',''].map(function(x){return '<th style="background:#060E1A;color:var(--amber2);padding:8px;text-align:left;font-size:9px;font-weight:700">'+x+'</th>';}).join('')+'</tr></thead><tbody>';DB.forEach(function(r,i){h+='<tr style="background:'+(i%2===0?'var(--card)':'var(--card2)')+'"><td style="padding:7px 8px;border-bottom:1px solid var(--border);color:rgba(255,255,255,.4)">'+(r.serial||i+1)+'</td><td style="padding:7px 8px;border-bottom:1px solid var(--border);color:var(--tx);font-weight:600">'+r.name+'</td><td style="padding:7px 8px;border-bottom:1px solid var(--border);color:var(--amber2);font-weight:700">'+r.kw+' kW</td><td style="padding:7px 8px;border-bottom:1px solid var(--border);color:var(--jade);font-weight:700">₹'+n(r.netCost)+'</td><td style="padding:7px 8px;border-bottom:1px solid var(--border);color:rgba(255,255,255,.4)">'+(r.projectStatus||'Lead')+'</td><td style="padding:7px 8px;border-bottom:1px solid var(--border)"><button onclick="delC('+i+')" style="background:rgba(192,57,43,.7);border:none;color:#fff;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:9px">✕</button></td></tr>';});h+='</tbody></table></div>';el.innerHTML=h;}document.getElementById('ov-db').classList.add('on');}
+function delC(i){if(confirm('Delete?')){DB.splice(i,1);lsSet('hs_db',DB);openDB();}}
+function exportExcel(){if(!DB.length)return;var cols=['serial','date','name','wa','kw','netCost','yearlySaving','payback'];var csv=cols.join(',')+'\n';DB.forEach(function(r){csv+=cols.map(function(c){return '"'+(r[c]||'')+'"';}).join(',')+'\n';});var blob=new Blob([csv],{type:'text/csv'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='Harihar-'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);}
+
+function showAdmTab(nm,el){['elec','comm','solar','calc','sheets','cinfo'].forEach(function(t){var el2=document.getElementById('adm-'+t);if(el2)el2.style.display=t===nm?'block':'none';});document.querySelectorAll('.adm-tab').forEach(function(t){t.classList.remove('on');});el.classList.add('on');if(nm==='calc')calcCost();}
+
+function calcCost(){
+  var kw=parseFloat(document.getElementById('cc-kw')?.value)||3;
+  var brand=document.getElementById('cc-brand')?.value||'Adani';
+  var margin=parseFloat(document.getElementById('cc-margin')?.value)||20;
+  var avgU=parseFloat(document.getElementById('cc-units')?.value)||200;
+  var c=COMPANIES.find(function(x){return x.name===brand;})||{rate:48000};
+  var gross=Math.round(kw*c.rate*(1+margin/100));
+  var sub=Math.round(calcSolar(kw));
+  var net=gross-sub;
+  var panels=Math.ceil(kw*1000/540);
+  var sg=Math.round(kw*4*365);
+  var su=Math.round(avgU*12);
+  var eg=Math.max(0,sg-su);
+  var gi=Math.round(eg*NET_RATE);
+  var yb=calcDomBill(avgU)*12;
+  var ys=Math.round(yb-MIN_BILL*12)+gi;
+  var pb=ys>0?parseFloat((net/ys).toFixed(1)):0;
+  var p25=Math.round(ys*25-net);
+  var set=function(id,val){var el=document.getElementById(id);if(el)el.textContent=val;};
+  set('cc-gross','₹'+n(gross));
+  set('cc-subsidy-val','-₹'+n(sub));
+  set('cc-net','₹'+n(net));
+  set('cc-saving','₹'+n(ys)+'/yr');
+  set('cc-panels',panels+' nos');
+  set('cc-payback',pb+' yr');
+  set('cc-profit','₹'+n(p25));
+}
+function openAdmin(){document.getElementById('ov-admin').classList.add('on');document.getElementById('adm-auth').style.display='block';document.getElementById('adm-panel').style.display='none';document.getElementById('apw').value='';}
+function checkAdmin(){if(document.getElementById('apw').value==='harihar2024'){document.getElementById('adm-auth').style.display='none';document.getElementById('adm-panel').style.display='block';renderSlabs();renderFCSlabs();SEL_BRAND_IDX=0;renderCompanies();}else alert('❌ Wrong password!');}
+
+function renderSlabs(){var sl=document.getElementById('slab-list');sl.innerHTML='';SLABS.forEach(function(s,i){var d=document.createElement('div');d.className='slab-row';['from','to','rate'].forEach(function(k){var inp=document.createElement('input');inp.type='number';inp.value=s[k];if(k==='rate')inp.step='0.01';inp.onchange=function(){SLABS[i][k]=+this.value;};inp.style.cssText='background:var(--input-bg,rgba(255,255,255,.05));border:1.5px solid var(--input-border,var(--border));border-radius:7px;padding:7px;color:var(--text-main,var(--tx2));width:100%;font-size:12px;outline:none';d.appendChild(inp);});var btn=document.createElement('button');btn.className='del-btn';btn.textContent='✕';btn.onclick=function(){SLABS.splice(i,1);renderSlabs();};d.appendChild(btn);sl.appendChild(d);});}
+function addSlab(){SLABS.push({from:0,to:0,rate:0});renderSlabs();}
+
+function renderFCSlabs(){
+  var cl=document.getElementById('fc-list');if(!cl)return;cl.innerHTML='';
+  // Header row
+  var hdr=document.createElement('div');
+  hdr.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:4px';
+  hdr.innerHTML='<span style="font-size:9px;color:var(--text-muted,rgba(255,255,255,.4));font-weight:700;padding:0 4px">Units (≤ tak)</span>'
+    +'<span style="font-size:9px;color:var(--text-muted,rgba(255,255,255,.4));font-weight:700;padding:0 4px">Fixed Charge (₹)</span>';
+  cl.appendChild(hdr);
+  var iStyle='background:var(--input-bg,rgba(255,255,255,.05));border:1.5px solid var(--input-border,var(--border));'
+    +'border-radius:7px;padding:9px 12px;color:var(--text-main,var(--tx2));width:100%;font-size:13px;font-weight:700;outline:none;box-sizing:border-box';
+  FC_SLABS.forEach(function(s,i){
+    var d=document.createElement('div');
+    d.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:7px;align-items:center;margin-bottom:7px';
+    var inp1=document.createElement('input');
+    inp1.type='number';inp1.value=s.upto;inp1.placeholder='Units upto';
+    inp1.onchange=function(){FC_SLABS[i].upto=+this.value;};
+    inp1.style.cssText=iStyle;
+    var inp2=document.createElement('input');
+    inp2.type='number';inp2.value=s.fixed;inp2.placeholder='₹ amount';
+    inp2.onchange=function(){FC_SLABS[i].fixed=+this.value;};
+    inp2.style.cssText=iStyle;
+    // NO delete button — fixed charges are MPPKVVCL verified slabs
+    d.appendChild(inp1);d.appendChild(inp2);cl.appendChild(d);
+  });
+  // Info note
+  var note=document.createElement('div');
+  note.style.cssText='font-size:9px;color:var(--jade);background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:7px;padding:7px 10px;margin-top:4px';
+  note.innerHTML='✅ MPPKVVCL Satna verified slabs — sirf values change karein, rows delete na karein';
+  cl.appendChild(note);
+}
+
+var SEL_BRAND_IDX = 0;
+
+function renderCompanies(){
+  var tabs=document.getElementById('brand-tabs');
+  if(!tabs)return;
+  var isLight=document.body.classList.contains('light-mode');
+  tabs.innerHTML='';
+  COMPANIES.forEach(function(c,i){
+    var sel=i===SEL_BRAND_IDX;
+    var btn=document.createElement('button');
+    // Fix: unselected brand visible in both dark+light mode
+    var bgUnsel = isLight ? '#F0F4F8' : 'rgba(255,255,255,.06)';
+    var colUnsel = isLight ? '#374151' : 'rgba(255,255,255,.7)';
+    var borUnsel = isLight ? '#C8D8E8' : 'rgba(255,255,255,.15)';
+    btn.style.cssText='padding:7px 16px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;'
+      +'border:1.5px solid '+(sel?'var(--jade)':borUnsel)+';'
+      +'background:'+(sel?'linear-gradient(135deg,var(--jade),var(--jade2))':bgUnsel)+';'
+      +'color:'+(sel?'#fff':colUnsel)+';';
+    btn.textContent=c.name;
+    btn.onclick=(function(idx){return function(){SEL_BRAND_IDX=idx;renderCompanies();};})(i);
+    tabs.appendChild(btn);
+  });
+
+  // Brand cost panel
+  var panel=document.getElementById('brand-cost-panel');
+  if(!panel)return;
+  var c=COMPANIES[SEL_BRAND_IDX];
+  if(!c){panel.innerHTML='';return;}
+
+  var iStyle='background:var(--input-bg,rgba(255,255,255,.05));border:1.5px solid var(--input-border,var(--border));'
+    +'border-radius:8px;padding:9px 12px;color:var(--text-main,var(--tx2));width:100%;font-size:14px;font-weight:700;'
+    +'outline:none;font-family:monospace;box-sizing:border-box;';
+  var lStyle='font-size:9px;font-weight:700;color:var(--jade);margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase;display:block;';
+  var totalStyle='font-size:11px;font-weight:900;color:var(--amber2);font-family:monospace;text-align:right;padding:8px 12px;'
+    +'background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:8px;';
+
+  var brandTotal = (c.panel||0) + (c.inverter||0);
+
+  panel.innerHTML=
+    '<div style="background:rgba(245,158,11,.07);border:1.5px solid rgba(245,158,11,.25);border-radius:12px;padding:14px 16px;margin-bottom:12px">'
+    // Brand header
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'
+    +'<div style="font-size:11px;font-weight:800;color:var(--amber2);letter-spacing:.5px">'+c.name+' — Brand Cost</div>'
+    +'<button onclick="if(COMPANIES.length>1){COMPANIES.splice('+SEL_BRAND_IDX+',1);SEL_BRAND_IDX=0;renderCompanies();}" '
+    +'style="background:rgba(192,57,43,.7);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:10px;font-weight:700">✕ Remove</button>'
+    +'</div>'
+    // Solar Panel row
+    +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">'
+    +'<div style="flex:1"><label style="'+lStyle+'">☀️ Solar Panel (₹/kW)</label>'
+    +'<input type="number" value="'+c.panel+'" style="'+iStyle+'" '
+    +'oninput="COMPANIES['+SEL_BRAND_IDX+'].panel=+this.value;updateCostSummary()"></div>'
+    // Inverter row
+    +'<div style="flex:1"><label style="'+lStyle+'">🔌 Inverter (₹/kW)</label>'
+    +'<input type="number" value="'+c.inverter+'" style="'+iStyle+'" '
+    +'oninput="COMPANIES['+SEL_BRAND_IDX+'].inverter=+this.value;updateCostSummary()"></div>'
+    // Brand total
+    +'<div style="min-width:100px;text-align:right">'
+    +'<div style="font-size:9px;font-weight:700;color:var(--amber2);margin-bottom:5px;letter-spacing:.5px">BRAND TOTAL</div>'
+    +'<div id="brand-total-val" style="'+totalStyle+'">₹'+n(brandTotal)+'</div>'
+    +'</div></div>'
+    +'</div>';
+
+  // Fill common charge inputs
+  ['structure','wiring','installation','mpeb','other'].forEach(function(k){
+    var el=document.getElementById('ch-'+k);
+    if(el)el.value=COMMON_CHARGES[k]||0;
+  });
+  updateCostSummary();
+}
+
+function updateCommon(key,val){
+  COMMON_CHARGES[key]=+val||0;
+  updateCostSummary();
+}
+
+function updateCostSummary(){
+  var c=COMPANIES[SEL_BRAND_IDX];
+  if(!c)return;
+
+  var brandTotal=(c.panel||0)+(c.inverter||0);
+  var commonTotal=Object.values(COMMON_CHARGES).reduce(function(a,b){return a+(+b||0);},0);
+  var baseTotal=brandTotal+commonTotal;
+  var margin=parseFloat(gv('margin'))||20;
+  var grandTotal=Math.round(baseTotal*(1+margin/100));
+
+  // Update brand total live
+  var btEl=document.getElementById('brand-total-val');
+  if(btEl)btEl.textContent='₹'+n(brandTotal);
+
+  // Build cost summary
+  var el=document.getElementById('cost-summary-rows');
+  if(!el)return;
+
+  var rowStyle='display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(128,128,128,.1);font-size:12px;';
+  var lblStyle='color:var(--text-muted,rgba(255,255,255,.55));';
+  var valStyle='font-weight:700;font-family:monospace;';
+  var subHdStyle='font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:8px 0 4px;color:';
+  var totalRowStyle='display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;font-size:12px;font-weight:800;margin-top:4px;';
+
+  var h='';
+
+  // — Brand section —
+  h+='<div style="'+subHdStyle+'var(--amber2)">☀️ Brand: '+c.name+'</div>';
+  h+='<div style="'+rowStyle+'"><span style="'+lblStyle+'">Solar Panel</span><span style="'+valStyle+'color:var(--amber2)">₹'+n(c.panel||0)+'</span></div>';
+  h+='<div style="'+rowStyle+'"><span style="'+lblStyle+'">Inverter</span><span style="'+valStyle+'color:var(--amber2)">₹'+n(c.inverter||0)+'</span></div>';
+  h+='<div style="'+totalRowStyle+'background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)">'
+    +'<span style="color:var(--amber2)">Brand Total</span>'
+    +'<span style="color:var(--amber2);font-family:monospace;font-size:14px">₹'+n(brandTotal)+'</span></div>';
+
+  // — Common section —
+  h+='<div style="'+subHdStyle+'var(--jade);margin-top:10px">🔧 Common Charges</div>';
+  var commonItems=[
+    ['🏗️ Structure', COMMON_CHARGES.structure||0],
+    ['⚡ Wiring', COMMON_CHARGES.wiring||0],
+    ['🔧 Installation', COMMON_CHARGES.installation||0],
+    ['📋 MPEB Charge', COMMON_CHARGES.mpeb||0],
+    ['📦 Other', COMMON_CHARGES.other||0],
+  ];
+  commonItems.forEach(function(r){
+    h+='<div style="'+rowStyle+'"><span style="'+lblStyle+'">'+r[0]+'</span><span style="'+valStyle+'color:var(--jade)">₹'+n(r[1])+'</span></div>';
+  });
+  h+='<div style="'+totalRowStyle+'background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.2)">'
+    +'<span style="color:var(--jade)">Common Total</span>'
+    +'<span style="color:var(--jade);font-family:monospace;font-size:14px">₹'+n(commonTotal)+'</span></div>';
+
+  // — Grand total section —
+  h+='<div style="margin-top:12px;border-top:2px solid rgba(128,128,128,.2);padding-top:10px">';
+  h+='<div style="'+rowStyle+'font-size:13px"><span style="color:var(--text-main,#fff);font-weight:700">Base Total (Brand + Common)</span><span style="'+valStyle+'color:var(--cyan);font-size:14px">₹'+n(baseTotal)+'</span></div>';
+  h+='<div style="'+rowStyle+'font-size:12px;padding-bottom:10px"><span style="color:var(--text-muted,rgba(255,255,255,.5))">Margin ('+margin+'%)</span><span style="'+valStyle+'color:var(--text-muted,rgba(255,255,255,.5))">+₹'+n(Math.round(baseTotal*margin/100))+'</span></div>';
+  h+='<div style="'+totalRowStyle+'background:linear-gradient(135deg,rgba(20,184,166,.15),rgba(34,211,238,.1));border:2px solid rgba(20,184,166,.4);margin-top:2px">'
+    +'<span style="color:var(--jade);font-size:14px;font-weight:900">Grand Total (per kW)</span>'
+    +'<span style="color:var(--amber2);font-family:monospace;font-size:18px;font-weight:900">₹'+n(grandTotal)+'</span></div>';
+  h+='</div>';
+
+  el.innerHTML=h;
+}
+
+function addCompany(){
+  var totalCommon=Object.values(COMMON_CHARGES).reduce(function(a,b){return a+b;},0);
+  COMPANIES.push({name:'New Brand',panel:25000,inverter:12000});
+  SEL_BRAND_IDX=COMPANIES.length-1;
+  renderCompanies();
+}
+
+function saveAdmin(){
+  FR.duty=+gv('fc-duty')||8;FR.pmSub1=+gv('pm-sub1')||30000;FR.pmSub2=+gv('pm-sub2')||60000;FR.pmSub3=+gv('pm-sub3')||78000;
+  MIN_BILL=+gv('fc-minbill')||75;FR.minbill=MIN_BILL;
+  var nr=parseFloat(gv('net-rate'));if(nr)NET_RATE=nr;
+  var tr=parseFloat(gv('tod-rate'));if(tr)TOD_RATE=tr;
+  var fr2=parseFloat(gv('fc-fuel'));if(fr2!==undefined)FUEL_RATE=fr2;
+  var isd=parseFloat(gv('fc-intsd'));if(isd)INTEREST_SD=isd;
+  CR.r1=+gv('cc-r1')||6.5;CR.r2=+gv('cc-r2')||8;CR.f1=+gv('cc-f1')||88;CR.f2=+gv('cc-f2')||144;CR.duty=+gv('cc-duty')||8;
+  MARGIN=+gv('margin')||20;
+  CINFO.ph=gv('c-ph');CINFO.em=gv('c-em');CINFO.ig=gv('c-ig');CINFO.wb=gv('c-wb');
+  var su=gv('sheets-url');if(su)SHEETS_URL=su;
+  lsSet('hs_sv7',SLABS);lsSet('hs_fc7',FC_SLABS);lsSet('hs_fv7',FR);lsSet('hs_cv4',CR);
+  lsSet('hs_mg4',MARGIN);lsSet('hs_ci4',CINFO);lsSet('hs_co8',COMPANIES);lsSet('hs_cc1',COMMON_CHARGES);
+  lsSet('hs_netr',NET_RATE);lsSet('hs_tod',TOD_RATE);lsSet('hs_fuel',FUEL_RATE);lsSet('hs_isd',INTEREST_SD);lsSet('hs_mb',MIN_BILL);
+  closeOv('ov-admin');alert('✅ All settings saved!');
+}
+</script>
+</body>
+</html>
