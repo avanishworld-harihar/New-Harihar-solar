@@ -473,6 +473,67 @@ body.light-mode #res-data div[style*="rgba(255,255,255"]{color:#64748B!important
 body.light-mode #res-data span[style*="rgba(255,255,255"]{color:#64748B!important}
 body.light-mode #analytics-content{color:#1A2E4A!important}
 body.light-mode #analytics-content div[style*="rgba(255,255,255"]{color:#64748B!important}
+/* ── Additional Light Mode Fixes ── */
+/* Header text in light mode */
+body.light-mode .header{
+  box-shadow: 0 2px 15px rgba(0,0,0,.08)!important;
+}
+body.light-mode .brand-sub{color:var(--jade2)!important}
+/* Bill drop zone text */
+body.light-mode .bill-drop .bill-lbl{color:var(--jade2)!important}
+body.light-mode #bt1,body.light-mode #bt2{color:var(--jade2)!important}
+body.light-mode #fill-msg div{background:rgba(20,184,166,.1)!important;color:var(--jade2)!important;border-color:rgba(20,184,166,.3)!important}
+/* Bill preview */
+body.light-mode .bill-prev{background:rgba(245,158,11,.05)!important;border-color:rgba(245,158,11,.2)!important}
+body.light-mode .bp-row{color:#374151!important;border-color:rgba(0,0,0,.06)!important}
+/* Info box (after bill upload) */
+body.light-mode .info-box{background:rgba(20,184,166,.06)!important;border-color:rgba(20,184,166,.2)!important}
+body.light-mode .irow{color:#374151!important;border-color:rgba(0,0,0,.05)!important}
+/* Month grid filled cells */
+body.light-mode .mc input.filled{background:rgba(20,184,166,.1)!important;border-color:rgba(20,184,166,.4)!important;color:#0D9488!important}
+/* Solar box */
+body.light-mode .solar-kw{color:var(--amber)!important}
+body.light-mode #req-sub{color:#374151!important}
+body.light-mode #lavg{color:var(--jade2)!important}
+/* Photo box */
+body.light-mode .photo-box{border-color:#D1E0EE!important;background:#F8FAFB!important}
+/* Calc wrap */
+body.light-mode .calc-wrap{background:rgba(20,184,166,.05)!important;border-color:rgba(20,184,166,.15)!important}
+/* Analysis/res page */
+body.light-mode #res-data .card{background:#FFFFFF!important}
+/* Overlay admin */
+body.light-mode .ob{background:#FFFFFF!important;border-color:rgba(20,184,166,.2)!important}
+body.light-mode .ov-head{color:var(--amber)!important}
+body.light-mode .adm-tab{border-color:#D1E0EE!important;color:#374151!important}
+body.light-mode .adm-tab.on{background:linear-gradient(135deg,var(--jade),var(--jade2))!important;color:#fff!important;border-color:var(--jade)!important}
+body.light-mode .divider{background:linear-gradient(90deg,transparent,#D1E0EE,transparent)!important}
+body.light-mode .slab-row input{background:#fff!important;border-color:#D1E0EE!important;color:#1A2E4A!important}
+body.light-mode .del-btn{background:rgba(192,57,43,.7)!important}
+body.light-mode .add-btn{border-color:var(--jade)!important;color:var(--jade)!important}
+body.light-mode .info-box .irow span:last-child{font-weight:700!important}
+/* Roof price box */
+body.light-mode #roof-price-box > div{background:#F8FAFB!important;border-color:#D1E0EE!important}
+body.light-mode #roof-sqm-val{color:var(--jade2)!important}
+body.light-mode #est-price-val{color:var(--amber)!important}
+body.light-mode #est-brand-val{color:#64748B!important}
+/* DCR admin table */
+body.light-mode #dcr-table-body tr{color:#374151!important}
+body.light-mode #kwprice-table-body > div{background:#F8FAFB!important;border-color:rgba(245,158,11,.25)!important}
+body.light-mode #kwprice-table-body input{background:#fff!important;border-color:rgba(245,158,11,.3)!important;color:#1A2E4A!important}
+/* Tab bar */
+body.light-mode .tab-wrap{background:var(--api-bar-bg)!important}
+/* API bar */
+body.light-mode .api-bar span{color:var(--jade2)!important}
+/* MS grid cells */
+body.light-mode .ms-ok{background:rgba(20,184,166,.12)!important;border-color:rgba(20,184,166,.4)!important;color:#0D9488!important}
+body.light-mode .ms-no{background:rgba(0,0,0,.04)!important;border-color:rgba(0,0,0,.1)!important;color:#9CA3AF!important}
+/* Modal/overlay backdrop */  
+body.light-mode .ov{background:rgba(0,0,0,.6)!important}
+/* xbtn close */
+body.light-mode .xbtn{background:rgba(0,0,0,.06)!important;border-color:#D1E0EE!important;color:#374151!important}
+body.light-mode .xbtn:hover{background:rgba(220,38,38,.1)!important;color:#DC2626!important}
+/* Spinner */
+body.light-mode .spinner{border-color:rgba(245,158,11,.3)!important;border-top-color:var(--amber)!important}
 
 @media print{
   @page { size: A4 portrait; margin: 0mm; }
@@ -787,11 +848,11 @@ body.light-mode .slide .sl-white [style*="color:#16A34A"]{color:#166534!importan
     <div class="sec-title">📄 Step 1 — Bill Upload <span style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);border-radius:20px;padding:2px 9px;font-size:8px;font-weight:800;display:inline-flex;align-items:center;gap:4px;color:var(--green2)"><span class="blink" style="background:var(--green2)"></span>AUTO FILL</span></div>
     <div class="bill-grid">
       <div><div class="bill-lbl">Bill 1 — Latest</div>
-        <div class="bill-drop" id="bb1"><input type="file" accept="image/*,.pdf" onchange="handleBill(1,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt1">Upload करें</div><div style="font-size:13px;color:rgba(255,255,255,.25)" id="bs1">JPG / PNG / PDF</div></div>
+        <div class="bill-drop" id="bb1"><input type="file" accept="image/*,.pdf" onchange="handleBill(1,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt1">Upload करें</div><div style="font-size:13px;color:rgba(255,255,255,.25)" id="bs1" style="color:var(--text-muted)">JPG / PNG / PDF</div></div>
         <div id="ms1" class="ms-grid" style="display:none"></div><div id="bi1" style="display:none"></div>
       </div>
       <div><div class="bill-lbl">Bill 2 — 6 Month Purana</div>
-        <div class="bill-drop" id="bb2"><input type="file" accept="image/*,.pdf" onchange="handleBill(2,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt2">Upload करें</div><div style="font-size:13px;color:rgba(255,255,255,.25)" id="bs2">JPG / PNG / PDF</div></div>
+        <div class="bill-drop" id="bb2"><input type="file" accept="image/*,.pdf" onchange="handleBill(2,this)"><div style="font-size:28px">📄</div><div style="font-size:12px;color:var(--jade);font-weight:700" id="bt2">Upload करें</div><div style="font-size:13px;color:rgba(255,255,255,.25)" id="bs2" style="color:var(--text-muted)">JPG / PNG / PDF</div></div>
         <div id="ms2" class="ms-grid" style="display:none"></div><div id="bi2" style="display:none"></div>
       </div>
     </div>
@@ -1239,24 +1300,26 @@ function calcSolar(kw){
 function calcEMI(p,r,y){var mr=r/(12*100),nn=y*12;if(!mr)return Math.round(p/nn);return Math.round(p*(mr*Math.pow(1+mr,nn))/(Math.pow(1+mr,nn)-1));}
 // Get price per kW based on selected brand and system size
 function getKwPrice(kw){
+  if(!KW_PRICE_TABLE||!KW_PRICE_TABLE.base) return 48000;
   var sizes=Object.keys(KW_PRICE_TABLE.base).map(Number).sort(function(a,b){return a-b;});
+  var base=0;
   // Find exact match or interpolate between nearest sizes
   var exactKey=sizes.find(function(s){return s===kw;});
-  if(exactKey){
-    var base=KW_PRICE_TABLE.base[exactKey];
+  if(exactKey!==undefined){
+    base=KW_PRICE_TABLE.base[exactKey];
   } else {
-    // Interpolate between two nearest sizes
     var lower=sizes.filter(function(s){return s<=kw;}).pop()||sizes[0];
     var upper=sizes.filter(function(s){return s>=kw;})[0]||sizes[sizes.length-1];
     if(lower===upper){
-      var base=KW_PRICE_TABLE.base[lower];
+      base=KW_PRICE_TABLE.base[lower];
     } else {
       var ratio=(kw-lower)/(upper-lower);
-      var base=Math.round(KW_PRICE_TABLE.base[lower]+(KW_PRICE_TABLE.base[upper]-KW_PRICE_TABLE.base[lower])*ratio);
+      base=Math.round(KW_PRICE_TABLE.base[lower]+(KW_PRICE_TABLE.base[upper]-KW_PRICE_TABLE.base[lower])*ratio);
     }
   }
   // Tata brand premium
-  if(SB==='Tata') base=Math.round(base*(1+KW_PRICE_TABLE.tata_premium/100));
+  var prem=KW_PRICE_TABLE.tata_premium||15;
+  if(SB==='Tata') base=Math.round(base*(1+prem/100));
   return Math.round(base/kw); // return per kW rate
 }
 
