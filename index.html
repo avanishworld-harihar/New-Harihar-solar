@@ -1165,7 +1165,7 @@ async function handleBill(num,inp){
     var b64=e.target.result.split(',')[1];
     var isPDF=file.type==='application/pdf';
     var mt=isPDF?'application/pdf':(file.type||'image/jpeg');
-    var prompt='Read this MPPKVVCL electricity bill carefully. Return ONLY valid JSON:\n{"name":"","address":"","consumer_id":"","meter_number":"","connection_date":"","sanctioned_load":"","phase":"Single or Three","connection_type":"domestic","months":{"jan":null,"feb":null,"mar":null,"apr":null,"may":null,"jun":null,"jul":null,"aug":null,"sep":null,"oct":null,"nov":null,"dec":null}}\n\nIMPORTANT RULES for extracting unit consumption:\n1. Find the Bill Month (e.g. FEB-2026). This is the CURRENT month.\n2. Get current month units from \"Reading Detail\" section → \"Final Consumption\" or \"Metered Unit Consumption\" field. Round to nearest integer.\n3. From \"Last Six Months Consumption\" table: take ONLY the 5 rows ABOVE the last row. The LAST ROW (shown in bold) is the SAME month from previous year — DO NOT use it.\n4. So total = 1 current month + 5 months from table = 6 months data.\n5. Map each Bill Month to correct JSON key: JAN=jan, FEB=feb, MAR=mar, APR=apr, MAY=may, JUN=jun, JUL=jul, AUG=aug, SEP=sep, OCT=oct, NOV=nov, DEC=dec.\n6. Leave all other months as null.\nReturn ONLY JSON, no explanation.';
+    var prompt='Read this MPPKVVCL electricity bill carefully. Return ONLY valid JSON:\n{"name":"","address":"","consumer_id":"","meter_number":"","connection_date":"","sanctioned_load":"","phase":"Single or Three","connection_type":"domestic or commercial or agricultural","months":{"jan":null,"feb":null,"mar":null,"apr":null,"may":null,"jun":null,"jul":null,"aug":null,"sep":null,"oct":null,"nov":null,"dec":null}}\n\nCONNECTION TYPE RULES:\n- Look for tariff category on the bill: LV1/LV1.2/LT1 = domestic, LT2/LV2/LT-2 = commercial, LT5/Agriculture = agricultural\n- Also check \"Category\" or \"Tariff\" field on the bill\n- Default to domestic if unclear\n\nIMPORTANT RULES for extracting unit consumption:\n1. Find the Bill Month (e.g. FEB-2026). This is the CURRENT month.\n2. Get current month units from \"Reading Detail\" section → \"Final Consumption\" or \"Metered Unit Consumption\" field. Round to nearest integer.\n3. From \"Last Six Months Consumption\" table: take ONLY the 5 rows ABOVE the last row. The LAST ROW (shown in bold) is the SAME month from previous year — DO NOT use it.\n4. So total = 1 current month + 5 months from table = 6 months data.\n5. Map each Bill Month to correct JSON key: JAN=jan, FEB=feb, MAR=mar, APR=apr, MAY=may, JUN=jun, JUL=jul, AUG=aug, SEP=sep, OCT=oct, NOV=nov, DEC=dec.\n6. Leave all other months as null.\nReturn ONLY JSON, no explanation.';
     // Build content block - PDF uses document type, images use image type
     var contentBlock=isPDF
       ?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}
@@ -1179,10 +1179,14 @@ async function handleBill(num,inp){
       var found=MKEYS.filter(function(k){return parsed.months&&parsed.months[k]>0;});
       bt.innerHTML='✅ '+found.length+' months found!';bs.textContent=file.name.substring(0,22);
       showMS(num,parsed.months);
+      var connLabel=parsed.connection_type?parsed.connection_type.charAt(0).toUpperCase()+parsed.connection_type.slice(1):'—';
+      var connColor=parsed.connection_type&&parsed.connection_type.toLowerCase().includes('comm')?'#f87171':'var(--jade)';
+      var connNote=parsed.connection_type&&parsed.connection_type.toLowerCase().includes('comm')?'<span style="color:#f87171;font-size:10px"> ⚠️ No Subsidy</span>':'';
       var ih='<div class="info-box">';
       if(parsed.name)ih+='<div class="irow"><span>👤 Name</span><span style="color:var(--amber2);font-weight:700">'+parsed.name+'</span></div>';
       if(parsed.consumer_id)ih+='<div class="irow"><span>🆔 ID</span><span style="color:var(--amber2);font-weight:700">'+parsed.consumer_id+'</span></div>';
       if(parsed.phase)ih+='<div class="irow"><span>⚡ Phase</span><span style="color:var(--jade);font-weight:700">'+parsed.phase+'</span></div>';
+      if(parsed.connection_type)ih+='<div class="irow"><span>🔌 Connection</span><span style="color:'+connColor+';font-weight:700">'+connLabel+connNote+'</span></div>';
       ih+='</div>';bi.innerHTML=ih;bi.style.display='block';autoFill();
     }catch(err){
       box.classList.remove('processing');
@@ -1327,20 +1331,21 @@ function renderPPT(){
   // ══════════════════════════════════════════════════════════
   var maxU=Math.max.apply(null,R.units.concat([1]));
   // Improved bar chart SVG — works in light mode too
-  var bSVG='<svg width="100%" height="110" viewBox="0 0 320 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
-  bSVG+='<rect width="320" height="110" rx="8" fill="rgba(248,250,252,1)"/>';
+  // Slide 2 bar chart — fixed: enough top padding so numbers don't clip
+  var bSVG='<svg width="100%" height="125" viewBox="0 0 320 125" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
+  bSVG+='<rect width="320" height="125" rx="8" fill="#F8FAFC"/>';
   R.units.forEach(function(u,i){
-    var bw=22,gap=4,bh=u>0?Math.max(6,Math.round((u/maxU)*72)):3;
-    var x=i*(bw+gap)+4,y=80-bh;
+    var bw=22,gap=4,bh=u>0?Math.max(6,Math.round((u/maxU)*68)):3;
+    var x=i*(bw+gap)+4,y=90-bh;
     var isSum=(i>=3&&i<=6);
-    bSVG+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+(isSum?'#D97706':'#14B8A6')+'" rx="3" opacity=".9"/>';
+    bSVG+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+bh+'" fill="'+(isSum?'#D97706':'#14B8A6')+'" rx="3"/>';
     if(isSum)bSVG+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="3" fill="#F59E0B" rx="2"/>';
-    bSVG+='<text x="'+(x+bw/2)+'" y="95" text-anchor="middle" font-size="7.5" fill="#64748B" font-weight="700" font-family="Segoe UI,sans-serif">'+labs[i]+'</text>';
-    if(u>0)bSVG+='<text x="'+(x+bw/2)+'" y="'+(y-4)+'" text-anchor="middle" font-size="7" fill="'+(isSum?'#92400E':'#0F766E')+'" font-weight="800" font-family="monospace">'+u+'</text>';
+    bSVG+='<text x="'+(x+bw/2)+'" y="105" text-anchor="middle" font-size="7.5" fill="#64748B" font-weight="700" font-family="Segoe UI,sans-serif">'+labs[i]+'</text>';
+    // number above bar — ensure minimum y=18 so it never clips top
+    if(u>0){var ny=Math.max(18,y-4);bSVG+='<text x="'+(x+bw/2)+'" y="'+ny+'" text-anchor="middle" font-size="7" fill="'+(isSum?'#92400E':'#0F766E')+'" font-weight="800" font-family="monospace">'+u+'</text>';}
   });
-  // Legend
-  bSVG+='<rect x="210" y="6" width="10" height="8" fill="#14B8A6" rx="2"/><text x="223" y="14" font-size="8" fill="#64748B" font-family="Segoe UI">Normal</text>';
-  bSVG+='<rect x="260" y="6" width="10" height="8" fill="#D97706" rx="2"/><text x="273" y="14" font-size="8" fill="#64748B" font-family="Segoe UI">Summer</text>';
+  bSVG+='<rect x="4" y="112" width="10" height="8" fill="#14B8A6" rx="2"/><text x="17" y="120" font-size="8" fill="#64748B" font-family="Segoe UI">Normal</text>';
+  bSVG+='<rect x="75" y="112" width="10" height="8" fill="#D97706" rx="2"/><text x="88" y="120" font-size="8" fill="#64748B" font-family="Segoe UI">Summer (Apr–Jul)</text>';
   bSVG+='</svg>';
 
   sl+='<div class="slide"><div class="sl-white" style="display:flex;flex-direction:column">';
@@ -1424,37 +1429,37 @@ function renderPPT(){
 
   // Step cards
   var steps=[
-    ['1','var(--jade)','Solar Generation','रोज कितनी बिजली बनेगी?',
-     R.kw+' kW × 4 घंटे धूप = <b style="color:#5EEAD4">'+dg+' units/day</b><br>'+dg+' × 365 दिन = <b style="color:#5EEAD4">'+n(yg)+' units/साल</b>',
-     '✅ आपका Solar साल में '+n(yg)+' units बनाएगा','#22C55E'],
+    ['1','#14B8A6','Solar Generation','रोज कितनी बिजली बनेगी?',
+     R.kw+' kW × 4 घंटे धूप = <b>'+dg+' units/day</b><br>'+dg+' × 365 दिन = <b>'+n(yg)+' units/साल</b>',
+     '✅ आपका Solar साल में '+n(yg)+' units बनाएगा','#14B8A6'],
     ['2','#F59E0B','आपकी खपत','कितनी बिजली चाहिए?',
-     'Average <b style="color:#FCD34D">'+Math.round(R.avg)+' units/month</b> × 12 = <b style="color:#FCD34D">'+n(R.selfUse)+' units/साल</b>',
-     '📊 आपकी जरूरत = '+n(R.selfUse)+' units','#FCD34D'],
+     'Average <b>'+Math.round(R.avg)+' units/month</b> × 12 = <b>'+n(R.selfUse)+' units/साल</b>',
+     '📊 आपकी जरूरत = '+n(R.selfUse)+' units','#D97706'],
     ['3','#16A34A','बिल में बचत','हर महीने कितना बचेगा?',
-     'अभी: ₹'+n(mbf)+'/mo × 12 = <b style="color:#4ADE80">₹'+n(R.yearlyBill)+'</b><br>Solar के बाद: ₹'+MIN_BILL+'/mo × 12 = ₹'+n(MIN_BILL*12),
-     '💡 Bill Saving = ₹'+n(billSaving)+'/साल','#4ADE80']
+     'अभी: ₹'+n(mbf)+'/mo × 12 = <b>₹'+n(R.yearlyBill)+'</b><br>Solar के बाद: ₹'+MIN_BILL+'/mo × 12 = ₹'+n(MIN_BILL*12),
+     '💡 Bill Saving = ₹'+n(billSaving)+'/साल','#16A34A']
   ];
   steps.forEach(function(s){
-    sl+='<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;background:rgba(255,255,255,.05);border-radius:12px;padding:12px;border-left:4px solid '+s[1]+'">'
+    sl+='<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;background:rgba(128,128,128,.08);border:1px solid rgba(128,128,128,.15);border-radius:12px;padding:12px;border-left:4px solid '+s[1]+'">'
       +'<div style="min-width:30px;height:30px;border-radius:50%;background:'+s[1]+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;flex-shrink:0">'+s[0]+'</div>'
       +'<div style="flex:1">'
-      +'<div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">'+s[2]+' — '+s[3]+'</div>'
-      +'<div style="font-size:13px;color:#fff;line-height:1.5">'+s[4]+'</div>'
-      +'<div style="font-size:13px;font-weight:800;color:'+s[6]+';margin-top:5px">'+s[5]+'</div>'
+      +'<div style="font-size:11px;color:rgba(128,128,128,.7);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">'+s[2]+' — '+s[3]+'</div>'
+      +'<div style="font-size:13px;line-height:1.5">'+s[4]+'</div>'
+      +'<div style="font-size:14px;font-weight:800;color:'+s[6]+';margin-top:5px">'+s[5]+'</div>'
       +'</div></div>';
   });
 
   // Big result grid
   sl+='<div style="background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(20,184,166,.08));border:2px solid rgba(34,197,94,.35);border-radius:14px;padding:12px;margin-top:4px">';
   sl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">';
-  [['TOTAL YEARLY SAVING','₹'+n(R.ys),'Bill Saving','#22C55E'],
-   ['PAYBACK PERIOD',R.pb+' साल','₹'+n(R.net)+' ÷ ₹'+n(R.ys)+'/yr','#F59E0B'],
-   ['25 YR PROFIT','₹'+n(R.s25),'शुद्ध मुनाफ़ा','#FBBF24']
+  [['TOTAL YEARLY SAVING','₹'+n(R.ys),'Bill Saving','#16A34A'],
+   ['PAYBACK PERIOD',R.pb+' साल','₹'+n(R.net)+' ÷ ₹'+n(R.ys)+'/yr','#D97706'],
+   ['25 YR PROFIT','₹'+n(R.s25),'शुद्ध मुनाफ़ा','#D97706']
   ].forEach(function(x,xi){
-    sl+='<div style="text-align:center'+(xi===1?';border-left:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)':'')+'">'
-      +'<div style="font-size:10px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:4px">'+x[0]+'</div>'
+    sl+='<div style="text-align:center'+(xi===1?';border-left:1px solid rgba(128,128,128,.2);border-right:1px solid rgba(128,128,128,.2)':'')+'">'
+      +'<div style="font-size:10px;color:rgba(128,128,128,.7);font-weight:700;margin-bottom:4px">'+x[0]+'</div>'
       +'<div style="font-size:24px;font-weight:900;color:'+x[3]+';font-family:monospace">'+x[1]+'</div>'
-      +'<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">'+x[2]+'</div>'
+      +'<div style="font-size:10px;color:rgba(128,128,128,.5);margin-top:2px">'+x[2]+'</div>'
       +'</div>';
   });
   sl+='</div>';
@@ -1494,6 +1499,10 @@ function renderPPT(){
     sl+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px dashed #D97706">';
     sl+='<span style="font-size:12px;color:#16A34A;font-weight:700">🎁 PM Surya Ghar Subsidy</span><span style="font-size:17px;font-weight:900;color:#16A34A;font-family:monospace">−₹'+n(R.sub)+'</span>';
     sl+='</div>';
+  } else if(R.conn==='commercial'){
+    sl+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px dashed #D97706">';
+    sl+='<span style="font-size:12px;color:#DC2626;font-weight:700">❌ PM Subsidy लागू नहीं</span><span style="font-size:13px;font-weight:700;color:#DC2626;background:#FEE2E2;border-radius:6px;padding:3px 9px">Commercial Connection</span>';
+    sl+='</div>';
   }
   sl+='</div>';
   // Net cost big box
@@ -1526,8 +1535,8 @@ function renderPPT(){
 
   // Gen vs consumption grouped bar chart
   var solarMonthly=Math.round(R.kw*4*30);
-  var gvcSVG='<svg width="100%" height="140" viewBox="0 0 320 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
-  gvcSVG+='<rect width="320" height="140" rx="8" fill="rgba(255,255,255,.04)"/>';
+  var gvcSVG='<svg width="100%" height="148" viewBox="0 0 320 148" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
+  gvcSVG+='<rect width="320" height="148" rx="8" fill="rgba(128,128,128,.08)" stroke="rgba(128,128,128,.15)" stroke-width="1"/>';
   var maxGVC=Math.max(solarMonthly,maxU,1);
   R.units.forEach(function(u,i){
     var gw=10,gap=2,grp=gw*2+gap,grpGap=6,x=i*(grp+grpGap)+4;
@@ -1536,12 +1545,12 @@ function renderPPT(){
     var sy=108-sh,cy=108-ch;
     gvcSVG+='<rect x="'+x+'" y="'+sy+'" width="'+gw+'" height="'+sh+'" fill="#F59E0B" rx="2" opacity=".85"/>';
     gvcSVG+='<rect x="'+(x+gw+gap)+'" y="'+cy+'" width="'+gw+'" height="'+ch+'" fill="'+(u>solarMonthly?'#F87171':'#22C55E')+'" rx="2" opacity=".85"/>';
-    gvcSVG+='<text x="'+(x+gw)+'" y="120" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.5)" font-family="monospace">'+labs[i]+'</text>';
+    gvcSVG+='<text x="'+(x+gw)+'" y="120" text-anchor="middle" font-size="7" fill="#666" font-family="monospace" font-weight="700">'+labs[i]+'</text>';
   });
   // Legend
-  gvcSVG+='<rect x="8" y="128" width="10" height="8" fill="#F59E0B" rx="2"/><text x="22" y="136" font-size="8.5" fill="rgba(255,255,255,.6)" font-family="Segoe UI">Solar Gen ('+solarMonthly+'u/mo)</text>';
-  gvcSVG+='<rect x="150" y="128" width="10" height="8" fill="#22C55E" rx="2"/><text x="164" y="136" font-size="8.5" fill="rgba(255,255,255,.6)" font-family="Segoe UI">Usage (surplus)</text>';
-  gvcSVG+='<rect x="240" y="128" width="10" height="8" fill="#F87171" rx="2"/><text x="254" y="136" font-size="8.5" fill="rgba(255,255,255,.6)" font-family="Segoe UI">Usage (excess)</text>';
+  gvcSVG+='<rect x="8" y="128" width="10" height="8" fill="#F59E0B" rx="2"/><text x="22" y="136" font-size="8.5" fill="#555" font-family="Segoe UI" font-weight="600">Solar Gen ('+solarMonthly+'u/mo)</text>';
+  gvcSVG+='<rect x="150" y="128" width="10" height="8" fill="#22C55E" rx="2"/><text x="164" y="136" font-size="8.5" fill="#555" font-family="Segoe UI" font-weight="600">Usage (covered)</text>';
+  gvcSVG+='<rect x="240" y="128" width="10" height="8" fill="#F87171" rx="2"/><text x="254" y="136" font-size="8.5" fill="#555" font-family="Segoe UI" font-weight="600">Usage (high)</text>';
   gvcSVG+='</svg>';
   sl+=gvcSVG;
 
